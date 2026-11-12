@@ -1,0 +1,24 @@
+/* Sample 9 — motion layer styles (GSAP drives the animation, CSS transitions step aside) */
+.motion .split .w > span, .motion .reveal, .motion .badges li { transition: none !important; }
+
+/* giant outline numeral behind every section */
+.ghost-n { position: absolute; top: 6vh; left: calc(var(--gut) * .4); z-index: 0; pointer-events: none; user-select: none;
+  font: 600 clamp(180px, 30vw, 460px)/.8 'Instrument Sans', sans-serif; letter-spacing: -.06em;
+  color: transparent; -webkit-text-stroke: 1.5px color-mix(in srgb, var(--ink) 26%, transparent); opacity: 0; transition: -webkit-text-stroke-color 1s; }
+.ghost-n.r { left: auto; right: calc(var(--gut) * .4); }
+.ch { position: relative; overflow: clip; }
+.ch > .wrap { position: relative; z-index: 1; transform-origin: 50% 0; will-change: transform, opacity; }
+
+/* shockwave when the globe lands on a stop */
+.arrive-fx { position: fixed; inset: 0; z-index: 3; pointer-events: none; overflow: hidden; }
+.arrive-fx i { position: absolute; border: 1.5px solid; border-radius: 50%; transform: translate(-50%, -50%); margin: 0; }
+.arrive-fx i { translate: -50% -50%; transform: none; }
+.arrive-fx b { position: absolute; width: 5px; height: 5px; border-radius: 50%; translate: -50% -50%; }
+.arrive-tag { position: fixed; z-index: 4; pointer-events: none; white-space: nowrap; font: 600 12px 'Geist Mono', monospace; letter-spacing: .16em; text-transform: uppercase; opacity: 0; padding: 7px 12px; border: 1px solid currentColor; background: color-mix(in srgb, var(--bg1) 55%, transparent); backdrop-filter: blur(8px); }
+
+/* counter digits roll in 3D */
+#cNum { display: inline-block; transform-origin: 50% 100%; }
+.counter-num { perspective: 300px; }
+
+@media (max-width: 760px) { .ghost-n { font-size: 44vw; top: 4vh; opacity: .6; } }
+@media (prefers-reduced-motion: reduce) { .ghost-n { opacity: .5; } }

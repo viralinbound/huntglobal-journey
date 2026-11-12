@@ -1,0 +1,438 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hunt Global — Building companies for an autonomous world</title>
+<meta name="description" content="Hunt Global is Singapore's global technology holding group. We invest our own capital, operate from within, and hold proprietary IP designed to compound.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600;700&family=Hanken+Grotesk:wght@400;500;700;800&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="journey.css">
+<link rel="stylesheet" href="motion.css">
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"}}</script>
+</head>
+<body>
+
+<!-- Brand monogram (from huntglobal.co) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="hgGradW" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ffffff"/><stop offset="55%" stop-color="#d9dbe0"/><stop offset="100%" stop-color="#ffffff"/></linearGradient>
+    <symbol id="hgMark" viewBox="0 0 520 490">
+      <g transform="translate(0,490) scale(0.1,-0.1)">
+        <path d="M2175 4409 c-16 -12 -115 -74 -220 -138 l-190 -118 -3 -1032 -2 -1031 -238 -1 c-130 -1 -304 -3 -387 -5 -82 -1 -162 0 -177 3 l-28 5 0 759 c0 418 -2 759 -4 759 -2 0 -62 -37 -133 -82 -71 -46 -165 -105 -211 -133 l-82 -50 0 -1321 0 -1321 217 -134 c119 -74 221 -135 225 -137 4 -2 9 302 10 675 l3 678 403 3 402 2 0 -347 c0 -192 3 -594 7 -895 l6 -548 217 0 217 0 6 422 c10 581 9 4008 0 4007 -5 0 -21 -9 -38 -20z"/>
+        <path d="M2612 2081 c1 -5 75 -72 162 -150 l159 -141 261 -2 c144 -1 329 -3 411 -3 83 -1 151 -4 153 -8 1 -4 2 -157 2 -339 l-1 -333 -237 -139 c-493 -290 -1207 -720 -1214 -730 -4 -6 -8 -62 -8 -123 l0 -113 264 0 264 0 358 218 c198 120 445 271 549 336 105 65 237 148 295 183 58 35 108 67 112 71 4 4 8 293 9 642 l2 635 -772 3 c-446 1 -771 -2 -769 -7z"/>
+        <path fill="#5B9BFF" d="M2584 4256 c-55 -37 -64 -55 -64 -127 0 -53 21 -85 75 -119 30 -18 44 -21 88 -15 28 4 63 13 77 20 30 16 61 51 53 59 -30 30 243 -39 392 -99 702 -281 1214 -882 1374 -1610 58 -264 67 -638 22 -890 -104 -583 -417 -1089 -897 -1452 -16 -12 -24 -22 -18 -22 18 -1 154 106 261 205 382 354 627 834 699 1364 30 224 14 559 -37 800 -122 567 -497 1106 -1004 1444 -184 122 -411 226 -627 286 -134 37 -167 48 -152 49 14 1 2 64 -16 86 -15 19 -113 55 -148 55 -15 0 -50 -15 -78 -34z"/>
+      </g>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- ============ LOADER (from Sample 4): the HG mark draws itself ============ -->
+<div class="loader4" id="loader" aria-hidden="true">
+  <div class="loader-mark">
+    <svg viewBox="0 0 520 490" class="draw-mark">
+      <g transform="translate(0,490) scale(0.1,-0.1)">
+        <path pathLength="1" d="M2175 4409 c-16 -12 -115 -74 -220 -138 l-190 -118 -3 -1032 -2 -1031 -238 -1 c-130 -1 -304 -3 -387 -5 -82 -1 -162 0 -177 3 l-28 5 0 759 c0 418 -2 759 -4 759 -2 0 -62 -37 -133 -82 -71 -46 -165 -105 -211 -133 l-82 -50 0 -1321 0 -1321 217 -134 c119 -74 221 -135 225 -137 4 -2 9 302 10 675 l3 678 403 3 402 2 0 -347 c0 -192 3 -594 7 -895 l6 -548 217 0 217 0 6 422 c10 581 9 4008 0 4007 -5 0 -21 -9 -38 -20z"/>
+        <path pathLength="1" d="M2612 2081 c1 -5 75 -72 162 -150 l159 -141 261 -2 c144 -1 329 -3 411 -3 83 -1 151 -4 153 -8 1 -4 2 -157 2 -339 l-1 -333 -237 -139 c-493 -290 -1207 -720 -1214 -730 -4 -6 -8 -62 -8 -123 l0 -113 264 0 264 0 358 218 c198 120 445 271 549 336 105 65 237 148 295 183 58 35 108 67 112 71 4 4 8 293 9 642 l2 635 -772 3 c-446 1 -771 -2 -769 -7z"/>
+      </g>
+      <circle class="orbit" cx="226" cy="297" r="235" pathLength="1"/>
+      <circle class="orbit-dot" cx="262" cy="65" r="13"/>
+    </svg>
+  </div>
+  <div class="loader-word"><b>HUNT</b><span>GLOBAL</span></div>
+  <div class="loader-foot mono"><span>Singapore · Global Technology Holding Group</span><span id="lpct">000</span></div>
+</div>
+
+<!-- hero video lives under the ball; the hero text lives above it -->
+<div class="hero-bg" id="heroBg" aria-hidden="true">
+  <div class="hero-media" id="heroMedia"><video id="heroVideo" src="assets/hero-sunrise.mp4" autoplay muted loop playsinline preload="auto"></video><div class="hero-shade"></div></div>
+</div>
+<!-- the journey route: drawn down the whole page, the ball travels on it -->
+<svg class="route" id="route" aria-hidden="true"><path class="route-ghost" id="routeGhost"/><path class="route-fill" id="routeFill"/><g id="routeStops"></g></svg>
+<canvas id="gl" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+<div class="sat-labels" id="satLabels" aria-hidden="true"></div>
+<div class="cursor" id="cursor" aria-hidden="true"><span></span></div>
+
+<!-- ============ HEADER ============ -->
+<header class="top">
+  <a href="#hero" class="logo" aria-label="Hunt Global — home">HUNT<br>GLOBAL</a>
+  <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="menu">
+    <i></i><i></i><i></i>
+  </button>
+</header>
+
+<nav class="menu" id="menu" aria-label="Site navigation" hidden>
+  <button class="menu-close" id="menuClose" aria-label="Close menu">&times;</button>
+  <ol class="menu-list" id="menuList"></ol>
+  <div class="menu-foot mono">
+    <a href="https://www.huntglobal.co/about" target="_blank" rel="noopener">About</a>
+    <a href="https://www.huntglobal.co/insights" target="_blank" rel="noopener">Insights</a>
+    <a href="#contact">Contact</a>
+    <a href="https://linkedin.com/" target="_blank" rel="noopener">LinkedIn</a>
+  </div>
+</nav>
+
+<!-- chapter counter (bottom-left) -->
+<div class="counter" id="counter">
+  <div class="counter-num mono"><b id="cNum">01</b><span>/<em id="cTot">11</em></span></div>
+  <div class="counter-arrows">
+    <button id="cUp" aria-label="Previous chapter">&#8963;</button>
+    <button id="cDown" aria-label="Next chapter">&#8964;</button>
+  </div>
+  <div class="counter-name mono" id="cName">Hunt Global</div>
+</div>
+
+<!-- ticker (bottom-right) -->
+<div class="ticker" id="ticker">
+  <span class="ticker-live mono">LIVE <i></i></span>
+  <div class="ticker-track"><div class="ticker-move mono" id="tickerMove"></div></div>
+  <button class="ticker-x" id="tickerX" aria-label="Hide ticker">&times;</button>
+</div>
+
+<main>
+
+<!-- 01 ============ HERO ============ -->
+<section class="hero4" id="hero" data-chapter="Hunt Global" data-state="hero" data-stop="Start · Singapore">
+  <div class="hero-pin">
+    <div class="hero-mark" id="heroMark" aria-hidden="true"><svg viewBox="0 0 520 490"><use href="#hgMark"/></svg></div>
+    <div class="floaters" id="floaters" aria-label="Portfolio companies"></div>
+    <div class="hero-copy" id="heroCopy">
+      <p class="eyebrow4 mono"><i></i>Singapore · Global Technology Holding Group</p>
+      <h1 class="hero-h"><span class="ln"><span>Building companies for</span></span><span class="ln"><span>an autonomous world</span></span></h1>
+      <div class="hero-row">
+        <p class="hero-sub4">A Singapore institution.<br>Built for the world.</p>
+        <a href="#house" class="btn-line">Begin the journey <span>↓</span></a>
+      </div>
+    </div>
+    <div class="hero-stats" id="heroStats">
+      <div><b data-hcount="5">0</b><span class="mono">Portfolio companies</span></div>
+      <div><b data-hcount="120" data-suf="+">0</b><span class="mono">Team worldwide</span></div>
+      <div><b data-hcount="4">0</b><span class="mono">Operating regions</span></div>
+      <div><b data-hcount="39" data-suf="+">0</b><span class="mono">Patents filed</span></div>
+    </div>
+    <div class="hero-after" id="heroAfter"><p class="mono">SGT <b id="sgt">--:--:--</b> · the journey starts here</p><p>A Singapore institution. Built for the world.</p></div>
+  </div>
+</section>
+
+<section class="ch house" id="house" data-state="house" data-stop="One house">
+  <div class="wrap">
+    <p class="label mono reveal">Hunt Global</p>
+    <h2 class="big-read" data-read>Capital, technology and operating capability under one house.</h2>
+    <div class="two-col">
+      <p class="reveal">Singapore's Global Technology Holding Group. We build the companies that define industries. We invest our own capital, operate from within, and hold proprietary IP designed to compound.</p>
+      <p class="reveal"><strong>Permanent Capital and Operational Depth.</strong> We deploy our own patient capital with complete alignment. Our 120+ team works inside every venture — we build from within, not advise from the sidelines, navigating the complexities of global expansion from a stable, institutional base.</p>
+    </div>
+    <div class="stats">
+      <div class="stat reveal"><b data-count="5">0</b><span class="mono">Portfolio companies</span></div>
+      <div class="stat reveal"><b data-count="120" data-suffix="+">0</b><span class="mono">Team worldwide</span></div>
+      <div class="stat reveal"><b data-count="4">0</b><span class="mono">Operating regions</span></div>
+      <div class="stat reveal"><b data-count="39" data-suffix="+">0</b><span class="mono">Patents filed</span></div>
+    </div>
+    <a class="link mono reveal" href="https://www.huntglobal.co/about" target="_blank" rel="noopener">About Hunt Global <span>&rarr;</span></a>
+  </div>
+</section>
+
+<!-- 02 ============ THE HEART ============ -->
+<section class="ch heart flip" id="heart" data-chapter="The Heart" data-state="heart" data-stop="The Heart">
+  <div class="wrap">
+    <p class="label mono reveal">Operations</p>
+    <h2 class="huge split">The Heart.</h2>
+    <p class="lead reveal">Orchestrated from Singapore. Scaling globally across APAC, MENA, UK/Europe and North America.</p>
+    <p class="reveal narrow">Our portfolio operates synchronously through a unified agentic framework. We partner with large enterprises across our key regions to build and deploy autonomous AI solutions, optimizing infrastructure and driving regional growth, all governed from our central HQ.</p>
+
+    <div class="core reveal">
+      <div class="core-head mono"><span>System core</span><span class="pulse-dot">The Heart — Singapore HQ</span></div>
+      <div class="core-metrics">
+        <div><span class="mono">Tasks today</span><b id="tasks">140,283</b></div>
+        <div><span class="mono">Messages exchanged</span><b id="msgs">892,105</b></div>
+      </div>
+      <ul class="core-agents mono" id="agents">
+        <li data-agent="0"><i></i>Biltflow</li>
+        <li data-agent="1"><i></i>Replaice</li>
+        <li data-agent="2"><i></i>HuntJobs</li>
+        <li data-agent="3"><i></i>Northstar</li>
+        <li data-agent="4"><i></i>Group HQ</li>
+      </ul>
+      <p class="core-note">An AI-first operating core. Specialized agents across Biltflow, Replaice, HuntJobs, Northstar and Group HQ process data, monitor capital flows and execute operational directives around the clock — orchestrated and governed from Singapore.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 03 ============ PORTFOLIO ============ -->
+<section class="ch portfolio no-exit" id="portfolio" data-chapter="Operating Companies" data-state="portfolio" data-stop="Five companies">
+  <div class="pf-pin">
+    <div class="pf-track" id="pfTrack">
+      <article class="pf-scene pf-intro">
+        <div class="pf-in">
+          <p class="label mono reveal">Portfolio &amp; Divisions</p>
+          <h2 class="huge split">Operating Companies</h2>
+          <p class="lead reveal">Five companies. One house. Each one is a chapter of the same story — travel through them.</p>
+          <p class="pf-hint mono reveal"><i></i>Keep scrolling — the journey turns sideways</p>
+        </div>
+      </article>
+      <!-- company chapters are written from data in main.js -->
+    </div>
+    <nav class="pf-road" aria-label="Portfolio chapters"><div class="pf-road-line"><b id="pfFill"></b></div><ol id="pfStops"></ol></nav>
+  </div>
+</section>
+
+<!-- 04-07 ============ PRACTICES ============ -->
+<section class="ch practice" id="investment" data-chapter="Investment" data-state="investment" data-stop="Investment">
+  <div class="wrap practice-grid">
+    <div>
+      <p class="label mono reveal">Practice · Investment</p>
+      <h2 class="huge split">Permanent Capital.</h2>
+      <p class="lead reveal">We deploy our own patient capital with complete alignment and active ownership.</p>
+      <p class="reveal narrow">We invest our own capital, ensuring complete alignment with our ventures. We don't dabble. We dominate.</p>
+      <a class="link mono reveal" href="https://www.huntglobal.co/practice/investment" target="_blank" rel="noopener">Explore practice <span>&rarr;</span></a>
+    </div>
+    <div class="thread" data-companies="biltflow,replaice,huntjobs,northstar,tribe"></div>
+  </div>
+</section>
+
+<section class="ch practice flip" id="venture" data-chapter="Venture Building" data-state="venture" data-stop="Venture Building">
+  <div class="wrap practice-grid">
+    <div>
+      <p class="label mono reveal">Practice · Venture Building</p>
+      <h2 class="huge split">Deep operational and capital deployment.</h2>
+      <p class="reveal narrow">Our 120+ team works inside every venture. We build from within, we do not advise from the sidelines — forming companies, developing commercial models and scaling operating infrastructure.</p>
+      <a class="link mono reveal" href="https://www.huntglobal.co/practice/venture-building" target="_blank" rel="noopener">Explore practice <span>&rarr;</span></a>
+    </div>
+    <div class="thread" data-companies="northstar,tribe,huntjobs"></div>
+  </div>
+</section>
+
+<section class="ch practice" id="technology" data-chapter="Technology &amp; Engineering" data-state="technology" data-stop="Technology">
+  <div class="wrap practice-grid">
+    <div>
+      <p class="label mono reveal">Practice · Technology &amp; Engineering</p>
+      <h2 class="huge split">IP at the core.</h2>
+      <p class="lead reveal">With 39+ patents filed across our portfolio, we develop proprietary, patent-protected technology designed to compound into long-term structural advantage.</p>
+      <p class="reveal narrow">We build proprietary systems designed to compound, scaling these innovations globally from our Singapore headquarters.</p>
+      <a class="link mono reveal" href="https://www.huntglobal.co/practice/technology-engineering" target="_blank" rel="noopener">Explore practice <span>&rarr;</span></a>
+    </div>
+    <div class="thread" data-companies="replaice,huntjobs,northstar"></div>
+  </div>
+</section>
+
+<section class="ch practice flip" id="construction" data-chapter="Construction Intelligence" data-state="construction" data-stop="Construction">
+  <div class="wrap practice-grid">
+    <div>
+      <p class="label mono reveal">Practice · Construction Intelligence</p>
+      <h2 class="huge split">The AI operating system for construction.</h2>
+      <p class="reveal narrow">BiltFlow OS™ connects every team, document, estimate, and supplier into one intelligent agentic workflow, from site discovery to project closeout.</p>
+      <a class="link mono reveal" href="https://www.huntglobal.co/practice/construction-intelligence" target="_blank" rel="noopener">Explore practice <span>&rarr;</span></a>
+    </div>
+    <div class="thread" data-companies="biltflow"></div>
+  </div>
+</section>
+
+<!-- 08 ============ HOW WE OPERATE ============ -->
+<section class="ch operate" id="operate" data-chapter="How We Operate" data-state="operate" data-stop="Four principles">
+  <div class="wrap">
+    <p class="label mono reveal">How we operate</p>
+    <h2 class="big-read" data-read>Four principles behind every company we build.</h2>
+    <ol class="principles" id="principles">
+      <li class="open">
+        <button>Permanent Capital<i>+</i></button>
+        <div><p>We invest our own capital, ensuring complete alignment with our ventures. We don't dabble. We dominate.</p></div>
+      </li>
+      <li>
+        <button>Operational Depth<i>+</i></button>
+        <div><p>Our 120+ team works inside every venture. We build from within, we do not advise from the sidelines — forming companies, developing commercial models and scaling operating infrastructure.</p></div>
+      </li>
+      <li>
+        <button>IP at the Core<i>+</i></button>
+        <div><p>With 39+ patents filed across our portfolio, we develop proprietary, patent-protected technology designed to compound into long-term structural advantage.</p></div>
+      </li>
+      <li>
+        <button>Global by Design<i>+</i></button>
+        <div><p>We grow our core regions through autonomous products and partner with enterprises building their own AI — consistently governed from our Singapore headquarters.</p></div>
+      </li>
+    </ol>
+  </div>
+  <div class="values" aria-label="Vision and values">
+    <div class="values-move">
+      <span>Conviction</span><i>✦</i><span>Discipline</span><i>✦</i><span>Ownership</span><i>✦</i><span>Execution</span><i>✦</i><span>Partnership</span><i>✦</i><span>Long-term thinking</span><i>✦</i>
+      <span>Conviction</span><i>✦</i><span>Discipline</span><i>✦</i><span>Ownership</span><i>✦</i><span>Execution</span><i>✦</i><span>Partnership</span><i>✦</i><span>Long-term thinking</span><i>✦</i>
+    </div>
+  </div>
+  <div class="wrap">
+    <p class="values-note reveal">Hunt Global is built on a foundation of Conviction, Discipline, Ownership, Execution, Partnership, and Long-term thinking. <strong>We do not dabble. We dominate.</strong></p>
+  </div>
+</section>
+
+<!-- 09 ============ GLOBAL PRESENCE ============ -->
+<section class="ch regions" id="regions" data-chapter="Global Presence" data-state="regions" data-stop="The world">
+  <div class="wrap">
+    <p class="label mono reveal">Global Presence</p>
+    <h2 class="huge split">Governed from Singapore. Delivering autonomous intelligence to the world.</h2>
+    <p class="lead reveal">Regional growth through autonomous technology.</p>
+    <div class="two-col regions-copy">
+      <p class="reveal">Our global footprint is defined not by capital deployment, but by enterprise partnership. We partner with large institutional clients across our key regions to build, integrate, and scale autonomous AI solutions.</p>
+      <p class="reveal">By deploying our proprietary operating systems into these markets, we help accelerate regional growth, enabling our partners to operate with unprecedented intelligence and efficiency. Every deployment is orchestrator-led and governed from our Singapore headquarters, ensuring institutional-grade security and capability globally.</p>
+    </div>
+    <div class="regions-grid">
+      <div class="region-panel reveal">
+        <div class="region-tabs mono" role="tablist">
+          <button class="on" data-region="0">APAC</button>
+          <button data-region="1">MENA</button>
+          <button data-region="2">UK/Europe</button>
+          <button data-region="3">North America</button>
+        </div>
+        <p class="region-text" id="regionText"></p>
+        <p class="mono small-label">Strategic nodes — tap to locate</p>
+        <ul class="cities" id="cities">
+          <li><button data-city="0"><span>Singapore</span><em class="mono">Group HQ</em></button></li>
+          <li><button data-city="1"><span>Sydney</span><em class="mono">Australia</em></button></li>
+          <li><button data-city="2"><span>Bangalore</span><em class="mono">India</em></button></li>
+          <li><button data-city="3"><span>San Francisco</span><em class="mono">USA</em></button></li>
+          <li><button data-city="4"><span>London</span><em class="mono">UK</em></button></li>
+        </ul>
+      </div>
+      <div class="globe-space"><span class="mono">Every node connected to Singapore HQ</span></div>
+    </div>
+    <blockquote class="quote reveal">
+      <p>“Singapore is not where we happen to be. It is the strategic foundation everything we build is designed around.”</p>
+      <footer class="mono">Why Singapore — Institutional IP framework. World-class governance. The gateway connecting enterprise partners across Sydney, Bangalore, London and San Francisco.</footer>
+    </blockquote>
+  </div>
+</section>
+
+<!-- 10 ============ GOVERNANCE + INSIGHTS ============ -->
+<section class="ch governance flip" id="governance" data-chapter="Governance" data-state="governance" data-stop="Governance">
+  <div class="wrap">
+    <p class="label mono reveal">Governance</p>
+    <h2 class="huge split">Enterprise-grade Security &amp; Governance</h2>
+    <p class="lead reveal narrow">Rigorous security and institutional governance are the foundations for our global enterprise AI deployment.</p>
+    <ul class="badges" id="badges">
+      <li>SOC 2 Type II</li><li>ISO/IEC 27001</li><li>ISO/IEC 42001 (AI)</li><li>GDPR</li><li>Singapore PDPA</li><li>MAS TRM Aligned</li><li>ACRA Registered</li>
+    </ul>
+
+    <div class="insights">
+      <div class="ins-head">
+        <div>
+          <p class="label mono reveal">Insights</p>
+          <p class="reveal">Research, updates, and market perspectives from the Hunt Global portfolio.</p>
+        </div>
+        <div class="filters mono reveal" id="insFilters">
+          <button class="on" data-ins="all">All Insights</button>
+          <button data-ins="articles">Articles</button>
+          <button data-ins="news">News</button>
+        </div>
+      </div>
+      <div class="ins-list" id="insList">
+        <a class="ins-card folder" data-type="articles" href="https://www.huntglobal.co/insights" target="_blank" rel="noopener">
+          <span class="tab mono">Articles · 2024</span>
+          <h3>Enterprise AI and Institutional Governance</h3>
+          <p>How rigorous MAS and ACRA frameworks accelerate our global AI deployment.</p>
+          <span class="mono read">Read article &rarr;</span>
+        </a>
+        <p class="ins-empty mono" hidden>No news published yet.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 11 ============ CONTACT ============ -->
+<section class="ch contact" id="contact" data-chapter="Let's build" data-state="contact" data-stop="End · Let’s build">
+  <div class="wrap contact-grid">
+    <div>
+      <p class="label mono reveal">Work with us</p>
+      <h2 class="huge split">Let’s build what comes next.</h2>
+      <p class="lead reveal">For investment opportunities, strategic partnerships and portfolio enquiries, speak with Hunt Global. Governed from Singapore.</p>
+    </div>
+    <form class="enquiry folder reveal" id="enquiry">
+      <span class="tab mono">Start a conversation</span>
+      <fieldset class="topics mono">
+        <legend class="sr">Enquiry type</legend>
+        <label><input type="radio" name="topic" value="Investment opportunity" checked><span>Investment</span></label>
+        <label><input type="radio" name="topic" value="Strategic partnership"><span>Partnership</span></label>
+        <label><input type="radio" name="topic" value="Portfolio enquiry"><span>Portfolio</span></label>
+      </fieldset>
+      <label class="field"><span class="mono">Name</span><input name="name" required autocomplete="name"></label>
+      <label class="field"><span class="mono">Email</span><input name="email" type="email" required autocomplete="email"></label>
+      <label class="field"><span class="mono">Company</span><input name="company" autocomplete="organization"></label>
+      <label class="field"><span class="mono">Message</span><textarea name="message" rows="3" required></textarea></label>
+      <button class="btn dark mono" type="submit">Send enquiry <span>&rarr;</span></button>
+      <p class="form-note mono" id="formNote">Opens your email app, addressed to hello@huntglobal.co</p>
+    </form>
+  </div>
+</section>
+
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-top">
+      <a href="#hero" class="logo big">HUNT<br>GLOBAL</a>
+      <form class="news" id="news">
+        <label class="mono" for="newsEmail">Subscribe to our newsletter</label>
+        <div><input id="newsEmail" type="email" placeholder="Email address" required><button class="mono" type="submit">Submit</button></div>
+      </form>
+    </div>
+    <div class="foot-cols">
+      <div>
+        <p class="mono h">Hunt Global</p>
+        <p>Level 8, 2 Venture Drive<br>Singapore 608526</p>
+        <a href="mailto:hello@huntglobal.co">hello@huntglobal.co</a>
+      </div>
+      <div>
+        <p class="mono h">About</p>
+        <a href="https://www.huntglobal.co/about" target="_blank" rel="noopener">About Us</a>
+        <a href="https://www.huntglobal.co/about/vision-values" target="_blank" rel="noopener">Vision &amp; Values</a>
+        <a href="https://www.huntglobal.co/about/approach" target="_blank" rel="noopener">Approach</a>
+        <a href="https://www.huntglobal.co/about/why-singapore" target="_blank" rel="noopener">Why Singapore</a>
+      </div>
+      <div>
+        <p class="mono h">Portfolio</p>
+        <a href="https://www.huntglobal.co/portfolio/biltflow" target="_blank" rel="noopener">Biltflow</a>
+        <a href="https://www.huntglobal.co/portfolio/replaice-technologies" target="_blank" rel="noopener">Replaice Technologies</a>
+        <a href="https://www.huntglobal.co/portfolio/huntjobs" target="_blank" rel="noopener">HuntJobs</a>
+        <a href="https://www.huntglobal.co/portfolio/northstar" target="_blank" rel="noopener">Northstar</a>
+        <a href="https://www.huntglobal.co/portfolio/tribe" target="_blank" rel="noopener">Tribe</a>
+      </div>
+      <div>
+        <p class="mono h">Practice</p>
+        <a href="#investment">Investment</a>
+        <a href="#venture">Venture Building</a>
+        <a href="#technology">Technology &amp; Engineering</a>
+        <a href="#construction">Construction Intelligence</a>
+      </div>
+      <div>
+        <p class="mono h">Global presence</p>
+        <p>Singapore — Group HQ<br>Sydney, Australia<br>Bangalore, India<br>San Francisco, USA<br>London, UK</p>
+      </div>
+    </div>
+    <div class="foot-bottom mono">
+      <span>© 2026 Hunt Global PTE Ltd. All rights reserved.</span>
+      <span><a href="https://www.huntglobal.co/privacy" target="_blank" rel="noopener">Privacy Policy</a> · <a href="https://www.huntglobal.co/terms" target="_blank" rel="noopener">Terms &amp; Conditions</a> · <a href="https://linkedin.com/" target="_blank" rel="noopener">LinkedIn</a></span>
+    </div>
+  </div>
+</footer>
+
+<!-- company drawer -->
+<aside class="drawer" id="drawer" aria-hidden="true">
+  <div class="drawer-scrim" data-close></div>
+  <div class="drawer-panel folder" role="dialog" aria-modal="true" aria-labelledby="dTitle">
+    <span class="tab mono" id="dTab"></span>
+    <button class="drawer-x" data-close aria-label="Close">&times;</button>
+    <div class="d-logo" id="dLogo"></div>
+    <h3 id="dTitle"></h3>
+    <p id="dDesc"></p>
+    <dl class="d-meta mono" id="dMeta"></dl>
+    <div class="d-links mono" id="dLinks"></div>
+    <div class="d-nav mono"><button id="dPrev">&larr; Prev</button><button id="dNext">Next &rarr;</button></div>
+  </div>
+</aside>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script type="module" src="main.js"></script>
+<script type="module" src="motion.js"></script>
+</body>
+</html>
