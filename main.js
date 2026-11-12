@@ -890,7 +890,9 @@ function onScroll() {
   $$('[data-read]').forEach(el => {
     const r = el.getBoundingClientRect();
     const p = (innerHeight * 0.85 - r.top) / (r.height + innerHeight * 0.35);
-    const words = el.children, lit = Math.floor(Math.max(0, Math.min(1, p)) * words.length * 1.05);
+    const words = el.children; let lit = Math.floor(Math.max(0, Math.min(1, p)) * words.length * 1.05);
+    // once read, words stay lit while scrolling back up; they reset only when the heading is fully below the screen
+    if (r.top > innerHeight) el._lit = 0; else { el._lit = Math.max(el._lit || 0, lit); lit = el._lit; }
     for (let i = 0; i < words.length; i++) words[i].classList.toggle('lit', i < lit);
   });
   if (!isMobile() && !reduceMotion) {
@@ -951,18 +953,32 @@ gsap.timeline({ scrollTrigger: { trigger: '#hero', start: 'top top', end: '40% t
    ========================================================= */
 {
   const track = $('#pfTrack'), scenes = $$('.pf-scene', track || document), roadBtns = $$('#pfStops button'), fillBar = $('#pfFill');
+  // one entrance timeline per chapter. A chapter animates ONCE, the first time you reach it going forward;
+  // going back it simply stays visible (no hide, no replay). Everything resets only when you scroll back
+  // above the whole Companies section, so it can play again next time down.
+  const tls = scenes.map((sc, j) => {
+    if (j === 0 || reduceMotion) return null;
+    const q = s => $$(s, sc);
+    const tl = gsap.timeline({ paused: true, defaults: { ease: 'expo.out' } })
+      .fromTo(q('.pf-k'), { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: .8 }, 0)
+      .fromTo(q('.pf-logo > *'), { opacity: 0, y: 30, filter: 'brightness(0) blur(8px)' }, { opacity: .85, y: 0, filter: 'brightness(0) blur(0px)', duration: 1.1 }, .08)
+      .fromTo(q('.pf-name'), { opacity: 0, yPercent: 60, y: 0, rotate: 3 }, { opacity: 1, yPercent: 0, y: 0, rotate: 0, duration: 1.2 }, .12)
+      .fromTo(q('.pf-line, .pf-desc, .pf-meta, .pf-cta'), { opacity: 0, y: 30, clipPath: 'inset(0 0 100% 0)' }, { opacity: 1, y: 0, clipPath: 'inset(0 0 -20% 0)', duration: 1, stagger: .08 }, .25);
+    tl.progress(1).progress(0);
+    return tl;
+  });
+  const played = new Set();
+  const showAll = () => tls.forEach((t, k) => { if (t) { played.add(k); t.progress(1); } });
+  const resetAll = () => { played.clear(); tls.forEach(t => t && t.pause(0)); };
   let activePf = -1;
   const playScene = j => {
     if (j === activePf) return; activePf = j;
     roadBtns.forEach((b, k) => { b.classList.toggle('on', k === j); b.classList.toggle('done', k < j); });
-    const sc = scenes[j]; if (!sc || j === 0) return;
-    const q = s => $$(s, sc);
-    gsap.timeline({ defaults: { ease: 'expo.out' } })
-      .fromTo(q('.pf-k'), { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: .8 }, 0)
-      .fromTo(q('.pf-logo > *'), { opacity: 0, y: 30, filter: 'brightness(0) blur(8px)' }, { opacity: .85, y: 0, filter: 'brightness(0) blur(0px)', duration: 1.1 }, .08)
-      .fromTo(q('.pf-name'), { opacity: 0, yPercent: 60, y: 0, rotate: 3 }, { opacity: 1, yPercent: 0, y: 0, rotate: 0, duration: 1.2 }, .12)
-      .fromTo(q('.pf-line, .pf-desc, .pf-meta, .pf-cta'), { opacity: 0, y: 30, clipPath: 'inset(0 0 100% 0)' }, { opacity: 1, y: 0, clipPath: 'inset(0 0 -20% 0)', duration: 1, stagger: .08 }, .25)
-      ;
+    for (let k = 1; k <= j; k++) {
+      if (!tls[k] || played.has(k)) continue;
+      played.add(k);
+      if (k === j) tls[k].restart(); else tls[k].progress(1);   // skipped chapters (fast scroll / jump) just appear
+    }
   };
   if (track && !isMobile() && !reduceMotion) {
     const dist = () => track.scrollWidth - innerWidth;
@@ -972,16 +988,27 @@ gsap.timeline({ scrollTrigger: { trigger: '#hero', start: 'top top', end: '40% t
       onUpdate: s => {
         const p = s.progress, n = scenes.length - 1;
         fillBar.style.transform = `scaleX(${p})`;
-        playScene(Math.round(p * n));
+        playScene(Math.min(n, Math.floor(p * n + 0.7)));   // start a chapter as soon as ~30% of it is on screen
         // depth: logos and big numerals drift at different speeds than the text
         scenes.forEach((sc, k) => { const d = k - p * n; sc.style.setProperty('--d', d.toFixed(3)); });
       },
-      onRefresh: () => drawRoute()
+      onRefresh: () => drawRoute(),
+      onLeave: showAll,                                   // fast scroll past the ride: nothing left hidden
+      onEnterBack: showAll,                               // coming back up into the ride: chapters are already there
+      onLeaveBack: () => { activePf = -1; resetAll(); }   // scrolled back above the whole section
     });
+    if (pfST.progress >= 1) showAll();
     roadBtns.forEach(b => b.addEventListener('click', () => { const j = +b.dataset.pf; scrollTo({ top: pfST.start + j / (scenes.length - 1) * (pfST.end - pfST.start) + 2, behavior: 'smooth' }); }));
   } else if (track) {
     // phones: chapters stack vertically and play as they arrive
-    scenes.forEach((sc, j) => ScrollTrigger.create({ trigger: sc, start: 'top 70%', onEnter: () => { activePf = -1; playScene(j); }, onEnterBack: () => { activePf = -1; playScene(j); } }));
+    scenes.forEach((sc, j) => {
+      const t = tls[j]; if (!t) return;
+      const st = ScrollTrigger.create({ trigger: sc, start: 'top 85%', end: 'bottom top',
+        onEnter: () => { if (!played.has(j)) { played.add(j); t.restart(); } },
+        onEnterBack: () => { played.add(j); if (t.progress() < 1) t.progress(1); } });   // scrolling up: just show it
+      ScrollTrigger.create({ trigger: sc, start: 'top bottom', onLeaveBack: () => { played.delete(j); t.pause(0); } });   // fully below the screen again
+      if (st.progress > 0) { played.add(j); t.progress(1); }
+    });
   }
 }
 

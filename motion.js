@@ -33,7 +33,8 @@ if (!reduce) {
   /* ---------- per-section entrance timelines ---------- */
   const sections = $$('section.ch');
   sections.forEach(sec => {
-    const q = s => $$(s, sec);
+    // elements inside a company chapter are animated by the chapter itself (main.js), never twice
+    const q = s => $$(s, sec).filter(el => !el.closest('.pf-scene:not(.pf-intro)'));
     const words = q('.split .w > span');
     const labels = q('.label');
     const blocks = q('.lead, p.reveal, .link, .values-note, .region-text, .two-col > p, .ins-head, .contact-grid > div > p');
@@ -65,15 +66,21 @@ if (!reduce) {
 
     // reset to the "before" state, then play whenever we arrive (down or back up)
     tl.progress(1).progress(0);
-    ST.create({
-      trigger: sec, start: 'top 62%', end: 'bottom 38%',
-      onEnter: () => tl.restart(), onEnterBack: () => tl.restart(),
-      onLeaveBack: () => tl.pause(0)
+    // play on the way DOWN only. On the way UP the content is simply there (instantly, if it never played,
+    // e.g. after a menu jump or a reload half-way down). Reset only once the section is fully below the
+    // screen, so nothing ever disappears while you can still see it.
+    const show = () => { if (tl.progress() < 1) { gsap.killTweensOf(tl); tl.progress(1).pause(); } };
+    const play = ST.create({
+      trigger: sec, start: 'top 82%', end: 'bottom top',
+      onEnter: () => { if (tl.progress() === 0) tl.restart(); else show(); },
+      onEnterBack: show
     });
+    ST.create({ trigger: sec, start: 'top bottom', onLeaveBack: () => { gsap.killTweensOf(tl); tl.pause(0); } });
+    if (play.progress > 0 || play.isActive) show();
 
     // slide-change exit: the section we are leaving drifts up, shrinks and fades
     const inner = $('.wrap', sec);
-    if (inner && !mobile() && !sec.classList.contains('no-exit')) gsap.fromTo(inner, { opacity: 1, scale: 1, y: 0 }, { opacity: .15, scale: .96, y: -70, ease: 'none', immediateRender: false, scrollTrigger: { trigger: sec, start: 'bottom 70%', end: 'bottom 10%', scrub: true } });
+    // (no exit fade: content must stay fully visible when you scroll back up)
     // the giant numeral drifts slower than the page
     if (ghost) gsap.fromTo(ghost, { y: 120 }, { y: -160, ease: 'none', scrollTrigger: { trigger: sec, start: 'top bottom', end: 'bottom top', scrub: true } });
   });
