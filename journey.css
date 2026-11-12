@@ -219,3 +219,28 @@ body.in-hero .counter, body.in-hero .ticker { transform: translateY(90px); opaci
   .thread .t-tab { font-size: 7.5px; }
 }
 @media (max-width: 600px) { .counter-name { display: none !important; } }
+
+/* =========================================================
+   Clean-up: no chapter road under the company chapters, no counter card
+   ========================================================= */
+.pf-road, .counter, .ticker { display: none !important; }
+
+/* company chapters always fit the screen height (short laptops, tablets) */
+@media (min-width: 761px) {
+  .pf-scene { align-items: center; padding-top: calc(var(--gut) + 56px); padding-bottom: 40px; }
+  .pf-name { font-size: clamp(44px, min(8vw, 12.5vh), 132px); }
+  .pf-logo { height: clamp(34px, 6vh, 58px); margin: clamp(12px, 3vh, 30px) 0 clamp(8px, 1.8vh, 18px); }
+  .pf-logo img { max-height: clamp(28px, 5vh, 48px); }
+  .pf-line { font-size: clamp(17px, min(2vw, 2.8vh), 28px); margin-top: clamp(10px, 2vh, 20px); }
+  .pf-desc { font-size: clamp(14px, 1.8vh, 16px); margin-top: clamp(8px, 1.6vh, 16px); }
+  .pf-meta { margin-top: clamp(12px, 2.4vh, 24px); }
+  .pf-cta .link { margin-top: clamp(12px, 2.4vh, 24px); }
+}
+@media (min-width: 761px) and (max-height: 720px) {
+  .pf-desc { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+}
+/* the landing flash keeps its shockwave, but no floating text tag over the page */
+.arrive-tag { display: none !important; }
+/* breathing room under the big headings (descenders of p / y were touching the next paragraph) */
+.huge + p, .huge + .reveal, .big-read + p { margin-top: clamp(20px, 3vh, 32px) !important; }
+.huge { padding-bottom: .06em; }

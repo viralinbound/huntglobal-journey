@@ -718,12 +718,13 @@ function drawRoute() {
   stopsG.innerHTML = stops.map((s, i) => {
     const st = ST_LIST[i], X = W / 2 * (1 + sideX(st)), Y = WP[i], r = ballRadiusPx(st);
     const first = i === 0, last = i === stops.length - 1;
+    const quiet = true;   // stop markers only — text labels collided with page text on small/short screens
     const label = s.dataset.stop || '';
     const ly = last ? Y - r - 40 : Y + r + 34;
     return `<g class="stop${first ? ' start' : ''}${last ? ' end' : ''}" data-i="${i}" transform="translate(${X.toFixed(1)} ${Y.toFixed(1)})">
       <circle class="ring" r="11"/><circle class="dot" r="4"/>
-      ${first ? '' : `<line class="stop-line" x1="0" y1="${(ly - Y - 16).toFixed(1)}" x2="0" y2="14"/>`}
-      ${first ? '' : `<text x="0" y="${(ly - Y).toFixed(1)}" text-anchor="middle">${label}</text><text class="tag" x="0" y="${(ly - Y + 16).toFixed(1)}" text-anchor="middle" opacity=".55">${st.tag}</text>`}
+      ${quiet ? '' : `<line class="stop-line" x1="0" y1="${(ly - Y - 16).toFixed(1)}" x2="0" y2="14"/>`}
+      ${quiet ? '' : `<text x="0" y="${(ly - Y).toFixed(1)}" text-anchor="middle">${label}</text><text class="tag" x="0" y="${(ly - Y + 16).toFixed(1)}" text-anchor="middle" opacity=".55">${st.tag}</text>`}
     </g>`;
   }).join('');
 }
