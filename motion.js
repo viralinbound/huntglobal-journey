@@ -115,6 +115,7 @@ if (!reduce) {
   const heads = $$('.huge, .big-read');
   let lastY = scrollY, skew = 0;
   gsap.ticker.add(() => {
+    if (mobile()) return;   // no headline skew on phones (keeps scrolling light)
     const v = scrollY - lastY; lastY = scrollY;
     skew += (Math.max(-6, Math.min(6, v * 0.12)) - skew) * 0.12;
     if (Math.abs(skew) > .02) heads.forEach(h => h.style.transform = `skewY(${(-skew).toFixed(2)}deg)`);

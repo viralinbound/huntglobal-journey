@@ -36,7 +36,7 @@ const COMPANIES = [
     id: 'tribe', name: 'Tribe', cat: 'Property and Lifestyle Technology', filter: 'property',
     logo: 'assets/tribe.svg',
     desc: 'The AI-powered operating and lifestyle platform for modern rental communities - connecting leasing, residents, property teams and neighbourhood services through one intelligent experience.',
-    site: null, page: 'https://www.huntglobal.co/portfolio/tribe',
+    site: 'https://tribeapp.com.au/', page: 'https://www.huntglobal.co/portfolio/tribe',
     meta: [['Sector', 'Property and Lifestyle Technology']]
   }
 ];
@@ -402,7 +402,7 @@ const mat = { m1: new THREE.Color('#9CC7FF'), m2: new THREE.Color('#ffffff') };
 let focusQ = null;
 const satLabels = $('#satLabels');
 const SAT_NAMES = ['Biltflow', 'Replaice', 'HuntJobs', 'Northstar', 'Group HQ'];
-const N_CORE = isMobile() ? 12000 : 30000, N_SHELL = isMobile() ? 1200 : 3200, NP = N_CORE + N_SHELL;
+const N_CORE = isMobile() ? 6500 : 30000, N_SHELL = isMobile() ? 700 : 3200, NP = N_CORE + N_SHELL;
 
 function llToVec(lat, lon, r = 1) {
   const phi = (90 - lat) * Math.PI / 180, th = (lon + 180) * Math.PI / 180;
@@ -454,8 +454,9 @@ function buildShapes(spherePos) {
 
 function initGL() {
   const canvas = $('#gl');
-  renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  renderer = new THREE.WebGLRenderer({ canvas, antialias: !isMobile(), alpha: true, powerPreference: 'high-performance' });
+  // resolution: phones start lighter; an auto-quality loop (in frame) lowers/raises it to keep scrolling smooth
+  const PR_MAX = isMobile() ? 1.25 : Math.min(devicePixelRatio, 1.75); renderer.setPixelRatio(PR_MAX); renderer.userData = { prMax: PR_MAX };
   renderer.setSize(innerWidth, innerHeight, false);
   scene = new THREE.Scene();
   camera = new THREE.PerspectiveCamera(35, innerWidth / innerHeight, 0.1, 100);
@@ -541,17 +542,17 @@ function initGL() {
         vec3 c = mix(uInner, uB, f * 0.9 + vN.y * 0.12);
         gl_FragColor = vec4(c, (0.22 + f * 0.6) * uAlpha); }`
   });
-  const inner = new THREE.Mesh(new THREE.SphereGeometry(1.94, 64, 64), innerMat);
+  const inner = new THREE.Mesh(new THREE.SphereGeometry(1.94, isMobile() ? 40 : 64, isMobile() ? 40 : 64), innerMat);
   inner.renderOrder = 1; orb.add(inner);
 
   // the skin: one sphere whose material changes per stop (BlueYard-style)
   skinMat = new THREE.ShaderMaterial({
     transparent: true, depthWrite: false,
-    uniforms: { tLogo: { value: null }, uLogoA: { value: -1 }, uLogoB: { value: -1 }, uLogoMix: { value: 0 }, uLogoC: { value: new THREE.Color('#ffffff') }, uTime: { value: 0 }, uMem: { value: 1 }, uRb: { value: 0 }, uPn: { value: 0 }, uHx: { value: 0 }, uIr: { value: 0 }, uAlpha: { value: 1 }, uM1: { value: mat.m1 }, uM2: { value: mat.m2 } },
+    uniforms: { tLogo: { value: null }, uLogoA: { value: -1 }, uLogoB: { value: -1 }, uLogoMix: { value: 0 }, uLogoC: { value: new THREE.Color('#ffffff') }, uLite: { value: isMobile() ? 1 : 0 }, uTime: { value: 0 }, uMem: { value: 1 }, uRb: { value: 0 }, uPn: { value: 0 }, uHx: { value: 0 }, uIr: { value: 0 }, uAlpha: { value: 1 }, uM1: { value: mat.m1 }, uM2: { value: mat.m2 } },
     vertexShader: `varying vec3 vP; varying vec3 vNv; varying vec3 vV;
       void main(){ vP = normalize(position); vec4 mv = modelViewMatrix * vec4(position, 1.0); vNv = normalize(normalMatrix * normal); vV = normalize(-mv.xyz); gl_Position = projectionMatrix * mv; }`,
     fragmentShader: `
-      uniform float uTime, uMem, uRb, uPn, uHx, uIr, uAlpha; uniform vec3 uM1, uM2;
+      uniform float uTime, uMem, uRb, uPn, uHx, uIr, uAlpha, uLite; uniform vec3 uM1, uM2;
       uniform sampler2D tLogo; uniform float uLogoA, uLogoB, uLogoMix; uniform vec3 uLogoC;
       float logoAt(float idx, vec2 lp){ if (idx < -0.5) return 0.0; vec2 uv = vec2(lp.x / 1.3 + 0.5, lp.y / 0.65 + 0.5); if (uv.x < 0.0 || uv.x > 1.0 || uv.y < 0.0 || uv.y > 1.0) return 0.0; return texture2D(tLogo, vec2((idx + uv.x) / 5.0, uv.y)).a; }
       varying vec3 vP; varying vec3 vNv; varying vec3 vV;
@@ -569,9 +570,9 @@ function initGL() {
         a += (fr * 0.75 + spec * 0.7) * uMem;
         // flowing ribbons (liquid metal / iridescent data)
         if (uRb > 0.001) {
-          vec3 q = P * 1.1; q += vec3(snoise(P * 0.8 + t * 0.05), snoise(P * 0.9 - t * 0.04), snoise(P * 0.7 + t * 0.035)) * 0.3;
-          float w = (q.y + q.x * 0.3) * 3.4 + snoise(q * 0.9 + t * 0.05) * 0.28;
-          float band = abs(sin(w * 6.2831)), fine = abs(sin(w * 6.2831 * 3.0 + snoise(q * 3.0) * 1.5));
+          vec3 q = P * 1.1; float n0 = snoise(P * 0.8 + t * 0.05); q += (uLite > 0.5 ? vec3(n0, n0 * 0.8, -n0) : vec3(n0, snoise(P * 0.9 - t * 0.04), snoise(P * 0.7 + t * 0.035))) * 0.3;
+          float w = (q.y + q.x * 0.3) * 3.4 + (uLite > 0.5 ? n0 * 0.2 : snoise(q * 0.9 + t * 0.05) * 0.28);
+          float band = abs(sin(w * 6.2831)), fine = abs(sin(w * 6.2831 * 3.0 + (uLite > 0.5 ? n0 * 1.2 : snoise(q * 3.0) * 1.5)));
           float line = smoothstep(0.78, 1.0, band), thin = smoothstep(0.94, 1.0, fine);
           vec3 ir = film(fr * 1.3 + w * 0.12 + t * 0.03);
           vec3 c = mix(uM1, uM2, line * 0.8 + thin * 0.2) * 0.8 + ir * 0.16 * (0.4 + fr);
@@ -608,7 +609,7 @@ function initGL() {
         if (uIr > 0.001) {
           vec2 s = N.xy; float rr = length(s), an = atan(s.y, s.x);
           float fib = snoise(vec3(an * 9.0, rr * 4.0 - t * 0.35, t * 0.1)) * 0.5 + 0.5;
-          float fib2 = snoise(vec3(an * 24.0, rr * 2.0, t * 0.2)) * 0.5 + 0.5;
+          float fib2 = uLite > 0.5 ? fract(sin(floor(an * 24.0) * 43.1) * 437.5) * 0.6 + fib * 0.4 : snoise(vec3(an * 24.0, rr * 2.0, t * 0.2)) * 0.5 + 0.5;
           float ring = smoothstep(0.17, 0.25, rr) * (1.0 - smoothstep(0.82, 0.98, rr));
           float pupil = 1.0 - smoothstep(0.15, 0.19, rr);
           vec3 c = mix(uM1, uM2, fib) * (0.45 + fib2 * 0.9) * ring + vec3(1.0) * pow(fib2, 6.0) * ring * 0.9;
@@ -627,7 +628,7 @@ function initGL() {
         gl_FragColor = vec4(col, clamp(a, 0.0, 1.0) * uAlpha);
       }`
   });
-  const skin = new THREE.Mesh(new THREE.SphereGeometry(2.03, 128, 128), skinMat);
+  const skin = new THREE.Mesh(new THREE.SphereGeometry(2.03, isMobile() ? 72 : 128, isMobile() ? 72 : 128), skinMat);
   skin.renderOrder = 3; globe.add(skin);
 
   // satellites for "The Heart"
@@ -750,6 +751,20 @@ let last = performance.now(), scrollVel = 0, lastScroll = scrollY, jS = 0;
 let lastArrive = 0, prevOrb = new THREE.Vector3(), trail = new THREE.Vector3(); const qInv = new THREE.Quaternion();
 const NUMS = ['x', 'y', 's', 'noise', 'spread', 'sat', 'city', 'alpha', 'glass', 'spin', 'gl', 'mem', 'rb', 'pn', 'hx', 'ir'];
 
+/* auto quality: if frames get slow (older phones), drop the globe's render resolution a step; climb back when smooth */
+let aqT = 0, aqN = 0, aqGood = 0;
+function setPR(v) { renderer.setPixelRatio(v); renderer.setSize(innerWidth, innerHeight, false); pointsMat.uniforms.uPixel.value = v; }
+function autoQuality(dt) {
+  aqT += dt; aqN++;
+  if (aqT < 1.2) return;
+  const ms = aqT / aqN * 1000; aqT = 0; aqN = 0;
+  const pr = renderer.getPixelRatio(), max = renderer.userData.prMax;
+  if (ms > 26 && pr > 0.6) { setPR(Math.max(0.6, +(pr - 0.2).toFixed(2))); aqGood = 0; }
+  else if (ms < 17.5) { if (++aqGood >= 3 && pr < max) { setPR(Math.min(max, +(pr + 0.15).toFixed(2))); aqGood = 0; } }
+  else aqGood = 0;
+  document.documentElement.dataset.pr = renderer.getPixelRatio();
+}
+
 function frame(now) {
   const dt = Math.min(0.05, (now - last) / 1000); last = now;
   const t = now / 1000;
@@ -822,7 +837,7 @@ function frame(now) {
     arcs.forEach(l => { l.material.opacity = cur.city * 0.55; l.visible = cur.city > 0.01; }); sats.visible = cur.sat > 0.01;
 
     // route: fill up to where the ball is, light the stop it rests at
-    fill.style.strokeDasharray = `${routeProgress(scrollY + innerHeight / 2).toFixed(1)} 1000000`;
+    // (the route line is hidden, so no per-frame route work)
     const near = Math.round(jS), resting = Math.abs(jS - near) < 0.18;
     // arriving at a stop: burst the glitter and tell the page (ripple, labels…)
     if (resting && near !== lastArrive) {
@@ -831,7 +846,7 @@ function frame(now) {
       dispatchEvent(new CustomEvent("hg:arrive", { detail: { i: near, x: (tmpV.x * .5 + .5) * innerWidth, y: (-tmpV.y * .5 + .5) * innerHeight, r: ballRadiusPx(ST_LIST[near]) * (mob ? .62 : 1), ink: ST_LIST[near].ink, name: stops[near].dataset.stop || "" } }));
     }
     if (Math.abs(jS - near) > 0.32) lastArrive = -1;
-    $$('#routeStops .stop').forEach((g, i) => { g.classList.toggle('done', i < near); g.classList.toggle('now', resting && i === near); });
+    autoQuality(dt);
 
     renderer.render(scene, camera);
   }

@@ -246,3 +246,19 @@ body.in-hero .counter, body.in-hero .ticker { transform: translateY(90px); opaci
 .huge { padding-bottom: .06em; }
 /* no path line on the page at all (route + its stop markers) */
 #route, .route { display: none !important; }
+
+/* =========================================================
+   Touch devices (phones + tablets): keep scrolling smooth.
+   The globe redraws every frame, so full-screen blend modes and
+   backdrop blur over it are re-computed constantly — swap them for
+   plain translucent fills that look almost the same.
+   ========================================================= */
+@media (max-width: 760px), (hover: none) and (pointer: coarse) {
+  .grain { display: none !important; }
+  *, *::before, *::after { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+  .thread .t-card { background: color-mix(in srgb, #fff 58%, transparent); }
+  .hero-stats { background: rgba(0, 0, 0, .42); }
+  .core, .region-panel { background: rgba(255, 255, 255, .16); }
+  .menu, .drawer-panel { background: #fffdfb; }
+  .ch > .wrap { will-change: auto; }
+}
