@@ -244,3 +244,5 @@ body.in-hero .counter, body.in-hero .ticker { transform: translateY(90px); opaci
 /* breathing room under the big headings (descenders of p / y were touching the next paragraph) */
 .huge + p, .huge + .reveal, .big-read + p { margin-top: clamp(20px, 3vh, 32px) !important; }
 .huge { padding-bottom: .06em; }
+/* no path line on the page at all (route + its stop markers) */
+#route, .route { display: none !important; }
