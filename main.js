@@ -6,37 +6,37 @@ import * as THREE from 'three';
 const COMPANIES = [
   {
     id: 'biltflow', name: 'Biltflow', cat: 'Construction Intelligence', filter: 'construction',
-    logo: 'assets/biltflow.svg',
+    logo: '/assets/biltflow.svg',
     desc: 'The AI operating system for construction — BiltFlow OS™ connects every team, document, estimate, and supplier into one intelligent agentic workflow, from site discovery to project closeout.',
-    site: 'https://biltflow.com/', page: 'https://www.huntglobal.co/portfolio/biltflow',
+    site: 'https://biltflow.com/', page: '/portfolio/biltflow/',
     meta: [['Sector', 'Construction Intelligence'], ['Product', 'BiltFlow OS™']]
   },
   {
     id: 'replaice', name: 'Replaice Technologies', cat: 'Technology and Engineering', filter: 'technology',
-    logo: 'assets/replaice.png',
+    logo: '/assets/replaice.png',
     desc: 'Autonomous AI Agents for enterprise growth — agentic CRM/ERP/HRMS/DMS systems, enterprise RAG (eRAG), AI Agent Workspace, LLM gateway.',
-    site: 'https://replaice.ai/', page: 'https://www.huntglobal.co/portfolio/replaice-technologies',
+    site: 'https://replaice.ai/', page: '/portfolio/replaice-technologies/',
     meta: [['Sector', 'Technology and Engineering'], ['Focus', 'Autonomous AI agents for enterprise']]
   },
   {
     id: 'huntjobs', name: 'HuntJobs', cat: 'AI · Talent Marketplace', filter: 'talent',
-    logo: 'assets/huntjobs.webp',
+    logo: '/assets/huntjobs.webp',
     desc: 'Your next opportunity, delivered in a heartbeat. An AI-powered jobs marketplace matching professionals with employers globally. Mobile apps available on the App Store and Google Play; used by candidates hired at major global companies.',
-    site: 'https://huntjobs.ai/', page: 'https://www.huntglobal.co/portfolio/huntjobs',
+    site: 'https://huntjobs.ai/', page: '/portfolio/huntjobs/',
     meta: [['Sector', 'AI · Talent Marketplace'], ['Apps', 'App Store · Google Play']]
   },
   {
     id: 'northstar', name: 'Northstar Humanoids and Robotics', short: 'Northstar', cat: 'Humanoids · Robotics', filter: 'robotics',
     logo: null, wordmark: 'NORTHSTAR',
     desc: 'Humanoids for industry. Northstar builds humanoid robotics and operational intelligence for industrial environments, operating from Singapore, Bangalore and San Francisco — orchestrated and governed from Singapore.',
-    site: null, page: 'https://www.huntglobal.co/portfolio/northstar',
+    site: null, page: '/portfolio/northstar/',
     meta: [['Sector', 'Humanoids · Robotics'], ['Locations', 'Singapore · Bangalore · San Francisco']]
   },
   {
     id: 'tribe', name: 'Tribe', cat: 'Property and Lifestyle Technology', filter: 'property',
-    logo: 'assets/tribe.svg',
+    logo: '/assets/tribe.svg',
     desc: 'The AI-powered operating and lifestyle platform for modern rental communities - connecting leasing, residents, property teams and neighbourhood services through one intelligent experience.',
-    site: 'https://tribeapp.com.au/', page: 'https://www.huntglobal.co/portfolio/tribe',
+    site: 'https://tribeapp.com.au/', page: '/portfolio/tribe/',
     meta: [['Sector', 'Property and Lifestyle Technology']]
   }
 ];
@@ -91,8 +91,11 @@ const STATES = {
   contact:      { ...M0, gl: 1, mem: .8, m1: '#ffb08f', m2: '#fff4e0', bg: ['#fbeecf', '#f7c6a4', '#ee7c60'], ink: '#17130f', a: '#ff5a3c', b: '#ffc790', c: '#ffffff', inner: '#ffb08f', x: -0.05, y: -0.85, s: 1.0,  noise: 1.0, spread: 1.0, sat: 0, city: 0, alpha: 1, shape: 'sphere', glass: 1, spin: 1, tag: 'Journey complete · governed from Singapore' }
 };
 
-const $ = (s, el = document) => el.querySelector(s);
+// The same script runs the home page and every sub page. A sub page has only some of the home page's
+// parts, so an id lookup that finds nothing returns a detached stand-in instead of null (nothing breaks).
+const $ = (s, el = document) => el.querySelector(s) || (s[0] === '#' && !s.includes(' ') ? document.createElement('div') : null);
 const $$ = (s, el = document) => [...el.querySelectorAll(s)];
+const HOME = !document.body.classList.contains('pg');
 const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const isMobile = () => innerWidth < 760;
 
@@ -109,7 +112,7 @@ const STORY = {
 };
 const monoLogo = c => c.logo ? `<img src="${c.logo}" alt="${c.name}">` : `<span class="wordmark">${c.wordmark}</span>`;
 {
-  const track = $('#pfTrack');
+  const track = $$('#pfTrack')[0];
   if (track) track.insertAdjacentHTML('beforeend', COMPANIES.map((c, i) => `
     <article class="pf-scene" data-state="pf-${c.id}" data-stop="${c.short || c.name}" style="--tint:${STORY[c.id].tint}">
       <div class="pf-in">
@@ -118,7 +121,7 @@ const monoLogo = c => c.logo ? `<img src="${c.logo}" alt="${c.name}">` : `<span 
         <p class="pf-line">${STORY[c.id].line}</p>
         <p class="pf-desc">${c.desc}</p>
         <dl class="pf-meta mono"><div><dt>Location</dt><dd>${STORY[c.id].loc}</dd></div><div><dt>Governance</dt><dd>Singapore HQ</dd></div></dl>
-        <div class="pf-cta"><button class="link mono" data-open="${c.id}">Read the full story <span>&rarr;</span></button>${c.site ? `<a class="link mono" href="${c.site}" target="_blank" rel="noopener">Visit site <span>&nearr;</span></a>` : ''}</div>
+        <div class="pf-cta"><a class="link mono" href="${c.page}">Read the full story <span>&rarr;</span></a>${c.site ? `<a class="link mono" href="${c.site}" target="_blank" rel="noopener">Visit site <span>&nearr;</span></a>` : ''}</div>
       </div>
     </article>`).join(''));
   const road = $('#pfStops');
@@ -220,7 +223,7 @@ function fillDrawer() {
   $('#dMeta').innerHTML = c.meta.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('') + `<dt>Governed</dt><dd>From Singapore HQ</dd>`;
   $('#dLinks').innerHTML =
     (c.site ? `<a href="${c.site}" target="_blank" rel="noopener">Visit website ↗</a>` : '') +
-    `<a class="ghost" href="${c.page}" target="_blank" rel="noopener">Portfolio page ↗</a>`;
+    `<a class="ghost" href="${c.page}">Full story →</a>`;
 }
 function closeDrawer() {
   drawer.classList.remove('open');
@@ -243,8 +246,7 @@ $('#dNext').onclick = () => { dIdx = (dIdx + 1) % COMPANIES.length; fillDrawer()
    ========================================================= */
 const chapters = $$('section[data-chapter]');
 $('#cTot').textContent = String(chapters.length).padStart(2, '0');
-$('#menuList').innerHTML = chapters.map((s, i) =>
-  `<li><a href="#${s.id}" data-i="${i}">${s.dataset.chapter}</a></li>`).join('');
+// the menu is the site map (written by build.mjs on every page)
 const menu = $('#menu'), menuBtn = $('#menuBtn');
 function setMenu(open) {
   menu.hidden = !open;
@@ -352,6 +354,7 @@ setInterval(() => {
   $('#msgs').textContent = fmt(msgs);
   const i = Math.floor(Math.random() * 5);
   const li = $$('#agents li')[i];
+  if (!li) return;
   li.classList.add('flash'); setTimeout(() => li.classList.remove('flash'), 420);
   satPulse[i] = 1;
 }, 1100);
@@ -451,7 +454,7 @@ function buildShapes(spherePos) {
     const out = new Float32Array(NP * 3), M2 = L.length / 3; for (let i = 0; i < NP; i++) { const j = (Math.random() * M2) | 0; out.set([L[j * 3], L[j * 3 + 1], L[j * 3 + 2]], i * 3); }
     SHAPES.globe = out; pairKey = ''; // force the buffers to refresh
   };
-  img.src = 'assets/earth-water.png';
+  img.src = '/assets/earth-water.png';
 }
 
 function initGL() {
@@ -886,8 +889,7 @@ function onScroll() {
   if (ci !== curChapter || !$('#cNum').dataset.set) {
     curChapter = ci; $('#cNum').dataset.set = 1;
     $('#cNum').textContent = String(ci + 1).padStart(2, '0');
-    $('#cName').textContent = chaptersAll[ci].dataset.chapter;
-    $$('#menuList a').forEach((a, i) => a.classList.toggle('cur', i === ci));
+    if (chaptersAll[ci]) $('#cName').textContent = chaptersAll[ci].dataset.chapter;
   }
   $$('[data-read]').forEach(el => {
     const r = el.getBoundingClientRect();
@@ -940,6 +942,7 @@ function intro() {
     .fromTo('#heroMark', { opacity: 0, scale: .6 }, { opacity: 1, scale: 1, duration: 1.6 }, .2);
   orbKick(1);
 }
+if (HOME) {
 gsap.timeline({ scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom bottom', scrub: .6 } })
   .to('#heroMedia', { clipPath: 'inset(14% 7% 22% 7%)', ease: 'none' }, 0)
   .to('#heroVideo', { scale: 1, ease: 'none' }, 0)
@@ -950,11 +953,12 @@ gsap.to('#heroMark', { opacity: 0, scale: .6, ease: 'none', scrollTrigger: { tri
 gsap.timeline({ scrollTrigger: { trigger: '#hero', start: 'top top', end: '40% top', scrub: true } })
   .to(floaters, { yPercent: i => [-260, -320, -180, -240, -200][i], xPercent: i => [-60, 60, -80, 80, 40][i], ease: 'none' }, 0)
   .to('#floaters', { opacity: 0, ease: 'none' }, 0);
+}
 /* =========================================================
    PORTFOLIO — the sideways story ride (one chapter per company)
    ========================================================= */
 {
-  const track = $('#pfTrack'), scenes = $$('.pf-scene', track || document), roadBtns = $$('#pfStops button'), fillBar = $('#pfFill');
+  const track = $$('#pfTrack')[0], scenes = $$('.pf-scene', track || document), roadBtns = $$('#pfStops button'), fillBar = $('#pfFill');
   // one entrance timeline per chapter. A chapter animates ONCE, the first time you reach it going forward;
   // going back it simply stays visible (no hide, no replay). Everything resets only when you scroll back
   // above the whole Companies section, so it can play again next time down.
@@ -963,7 +967,6 @@ gsap.timeline({ scrollTrigger: { trigger: '#hero', start: 'top top', end: '40% t
     const q = s => $$(s, sc);
     const tl = gsap.timeline({ paused: true, defaults: { ease: 'expo.out' } })
       .fromTo(q('.pf-k'), { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: .8 }, 0)
-      .fromTo(q('.pf-logo > *'), { opacity: 0, y: 30, filter: 'brightness(0) blur(8px)' }, { opacity: .85, y: 0, filter: 'brightness(0) blur(0px)', duration: 1.1 }, .08)
       .fromTo(q('.pf-name'), { opacity: 0, yPercent: 60, y: 0, rotate: 3 }, { opacity: 1, yPercent: 0, y: 0, rotate: 0, duration: 1.2 }, .12)
       .fromTo(q('.pf-line, .pf-desc, .pf-meta, .pf-cta'), { opacity: 0, y: 30, clipPath: 'inset(0 0 100% 0)' }, { opacity: 1, y: 0, clipPath: 'inset(0 0 -20% 0)', duration: 1, stagger: .08 }, .25);
     tl.progress(1).progress(0);
@@ -1031,7 +1034,32 @@ gsap.timeline({ scrollTrigger: { trigger: '#hero', start: 'top top', end: '40% t
 const sgFmt = new Intl.DateTimeFormat('en-GB', { timeZone: 'Asia/Singapore', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
 setInterval(() => { $('#sgt').textContent = sgFmt.format(new Date()); }, 1000);
 
+/* live local time for any [data-tz] element (sub pages: cities, contact) */
+const tzEls = $$('[data-tz]');
+if (tzEls.length) {
+  const fmts = {}, tick = () => tzEls.forEach(el => { const tz = el.dataset.tz; (fmts[tz] ||= new Intl.DateTimeFormat('en-GB', { timeZone: tz, hour: '2-digit', minute: '2-digit', hour12: false })); el.textContent = fmts[tz].format(new Date()); });
+  tick(); setInterval(tick, 15000);
+}
+
+/* page-to-page: every internal link stays in this site, with a short fade out */
+document.addEventListener('click', e => {
+  const a = e.target.closest?.('a[href]');
+  if (!a || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || a.target === '_blank') return;
+  const url = new URL(a.href, location.href);
+  if (url.origin !== location.origin || (url.pathname === location.pathname && url.hash)) return;
+  e.preventDefault();
+  document.body.classList.add('leaving');
+  setTimeout(() => { location.href = url.href; }, reduceMotion ? 0 : 300);
+});
+addEventListener('pageshow', e => { if (e.persisted) document.body.classList.remove('leaving'); });
+
+function bootPage() {   // sub pages: no loader, the page fades in and the journey starts at once
+  drawRoute(); ScrollTrigger.refresh(); onScroll();
+  orbKick(1);
+}
+
 function boot() {
+  if (!HOME) return bootPage();
   document.body.classList.add('locked');
   const lp = { v: 0 };
   const tl = gsap.timeline();

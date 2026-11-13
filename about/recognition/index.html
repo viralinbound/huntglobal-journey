@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Recognition — Hunt Global</title>
+<meta name="description" content="Institutional validation across our operating regions.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600;700&family=Hanken+Grotesk:wght@400;500;700;800&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css?v=24">
+<link rel="stylesheet" href="/journey.css?v=24">
+<link rel="stylesheet" href="/motion.css?v=24">
+<link rel="stylesheet" href="/pages.css?v=24">
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"}}</script>
+</head>
+<body class="pg" data-page="/about/recognition/">
+<!-- Brand monogram (from huntglobal.co) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="hgGradW" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ffffff"/><stop offset="55%" stop-color="#d9dbe0"/><stop offset="100%" stop-color="#ffffff"/></linearGradient>
+    <symbol id="hgMark" viewBox="0 0 520 490">
+      <g transform="translate(0,490) scale(0.1,-0.1)">
+        <path d="M2175 4409 c-16 -12 -115 -74 -220 -138 l-190 -118 -3 -1032 -2 -1031 -238 -1 c-130 -1 -304 -3 -387 -5 -82 -1 -162 0 -177 3 l-28 5 0 759 c0 418 -2 759 -4 759 -2 0 -62 -37 -133 -82 -71 -46 -165 -105 -211 -133 l-82 -50 0 -1321 0 -1321 217 -134 c119 -74 221 -135 225 -137 4 -2 9 302 10 675 l3 678 403 3 402 2 0 -347 c0 -192 3 -594 7 -895 l6 -548 217 0 217 0 6 422 c10 581 9 4008 0 4007 -5 0 -21 -9 -38 -20z"/>
+        <path d="M2612 2081 c1 -5 75 -72 162 -150 l159 -141 261 -2 c144 -1 329 -3 411 -3 83 -1 151 -4 153 -8 1 -4 2 -157 2 -339 l-1 -333 -237 -139 c-493 -290 -1207 -720 -1214 -730 -4 -6 -8 -62 -8 -123 l0 -113 264 0 264 0 358 218 c198 120 445 271 549 336 105 65 237 148 295 183 58 35 108 67 112 71 4 4 8 293 9 642 l2 635 -772 3 c-446 1 -771 -2 -769 -7z"/>
+        <path fill="#5B9BFF" d="M2584 4256 c-55 -37 -64 -55 -64 -127 0 -53 21 -85 75 -119 30 -18 44 -21 88 -15 28 4 63 13 77 20 30 16 61 51 53 59 -30 30 243 -39 392 -99 702 -281 1214 -882 1374 -1610 58 -264 67 -638 22 -890 -104 -583 -417 -1089 -897 -1452 -16 -12 -24 -22 -18 -22 18 -1 154 106 261 205 382 354 627 834 699 1364 30 224 14 559 -37 800 -122 567 -497 1106 -1004 1444 -184 122 -411 226 -627 286 -134 37 -167 48 -152 49 14 1 2 64 -16 86 -15 19 -113 55 -148 55 -15 0 -50 -15 -78 -34z"/>
+      </g>
+    </symbol>
+  </defs>
+</svg>
+<canvas id="gl" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+<div class="sat-labels" id="satLabels" aria-hidden="true"></div>
+<div class="cursor" id="cursor" aria-hidden="true"><span></span></div>
+
+<header class="top">
+  <a href="/" class="logo" aria-label="Hunt Global — home">HUNT<br>GLOBAL</a>
+  <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="menu"><i></i><i></i><i></i></button>
+</header>
+<nav class="menu" id="menu" aria-label="Site navigation" hidden>
+  <button class="menu-close" id="menuClose" aria-label="Close menu">&times;</button>
+  <ol class="menu-list" id="menuList">
+    <li><a href="/">Home</a></li>
+    <li><a href="/about/" class="cur" aria-current="page">About</a></li>
+    <li><a href="/portfolio/">Portfolio</a></li>
+    <li><a href="/practice/">Practice</a></li>
+    <li><a href="/regions/">Global Presence</a></li>
+    <li><a href="/insights/">Insights</a></li>
+    <li><a href="/careers/">Careers</a></li>
+    <li><a href="/contact/">Contact</a></li>
+  </ol>
+  <div class="menu-foot mono">
+    <a href="/privacy/">Privacy</a>
+    <a href="/terms/">Terms</a>
+    <a href="mailto:hello@huntglobal.co">hello@huntglobal.co</a>
+    <a href="https://linkedin.com/" target="_blank" rel="noopener">LinkedIn</a>
+  </div>
+</nav>
+
+<main>
+<section class="ch pg-sec flip pg-hero" id="s1" data-state="governance" data-chapter="Recognition">
+  <div class="wrap">
+    <p class="crumb mono reveal"><a href="/">Hunt Global</a><i></i><a href="/about/">About</a><i></i><b>Recognition</b></p>
+    <p class="label mono reveal">Recognition</p>
+    <h1 class="huge split">Institutional validation.</h1>
+    <p class="lead reveal">As a Singapore-headquartered institution, our commitment to excellence, governance, and technological innovation is continuously recognized across our operating regions.</p>
+    
+    <p class="pg-cue mono reveal"><i></i>Scroll</p>
+  </div>
+</section>
+
+<section class="ch pg-sec pg-end" id="s2" data-state="technology" data-chapter="Across the portfolio">
+  <div class="wrap">
+    <p class="label mono reveal">Across the portfolio</p>
+    <h2 class="big-read" data-read>Built on proprietary, patent-protected IP.</h2>
+    <p class="lead reveal">Our portfolio companies frequently achieve industry accolades for advancements in enterprise AI, construction intelligence, and robotics, reflecting our core strategy of building proprietary, patent-protected IP.</p>
+    <ul class="badges pg-badges"><li>SOC 2 Type II</li><li>ISO/IEC 27001</li><li>ISO/IEC 42001 (AI)</li><li>GDPR</li><li>Singapore PDPA</li><li>MAS TRM Aligned</li><li>ACRA Registered</li></ul>
+    <a class="pg-next reveal" href="/portfolio/"><span class="mono">Next</span><b>Portfolio <i>&rarr;</i></b></a>
+  </div>
+</section>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-top">
+      <a href="/" class="logo big">HUNT<br>GLOBAL</a>
+      <form class="news" id="news">
+        <label class="mono" for="newsEmail">Subscribe to our newsletter</label>
+        <div><input id="newsEmail" type="email" placeholder="Email address" required><button class="mono" type="submit">Submit</button></div>
+      </form>
+    </div>
+    <div class="foot-cols">
+      <div>
+        <p class="mono h">Hunt Global</p>
+        <p>Level 8, 2 Venture Drive<br>Singapore 608526</p>
+        <a href="mailto:hello@huntglobal.co">hello@huntglobal.co</a>
+        <a href="/insights/">Insights</a>
+        <a href="/careers/">Careers</a>
+        <a href="/contact/">Contact</a>
+      </div>
+      <div>
+        <p class="mono h">About</p>
+        <a href="/about/">About Us</a>
+        <a href="/about/vision-values/">Vision &amp; Values</a>
+        <a href="/about/approach/">Approach</a>
+        <a href="/about/why-singapore/">Why Singapore</a>
+        <a href="/about/recognition/">Recognition</a>
+      </div>
+      <div>
+        <p class="mono h">Portfolio</p>
+        <a href="/portfolio/biltflow/">Biltflow</a>
+        <a href="/portfolio/replaice-technologies/">Replaice Technologies</a>
+        <a href="/portfolio/huntjobs/">HuntJobs</a>
+        <a href="/portfolio/northstar/">Northstar</a>
+        <a href="/portfolio/tribe/">Tribe</a>
+      </div>
+      <div>
+        <p class="mono h">Practice</p>
+        <a href="/practice/investment/">Investment</a>
+        <a href="/practice/venture-building/">Venture Building</a>
+        <a href="/practice/technology-engineering/">Technology &amp; Engineering</a>
+        <a href="/practice/construction-intelligence/">Construction Intelligence</a>
+      </div>
+      <div>
+        <p class="mono h">Global presence</p>
+        <a href="/regions/">Global Presence</a>
+        <p>Singapore — Group HQ<br>Sydney, Australia<br>Bangalore, India<br>San Francisco, USA<br>London, UK</p>
+      </div>
+    </div>
+    <div class="foot-bottom mono">
+      <span>© 2026 Hunt Global PTE Ltd. All rights reserved.</span>
+      <span><a href="/privacy/">Privacy Policy</a> · <a href="/terms/">Terms &amp; Conditions</a> · <a href="https://linkedin.com/" target="_blank" rel="noopener">LinkedIn</a></span>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script type="module" src="/main.js?v=24"></script>
+<script type="module" src="/motion.js?v=24"></script>
+</body>
+</html>

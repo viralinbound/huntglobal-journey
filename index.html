@@ -8,9 +8,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600;700&family=Hanken+Grotesk:wght@400;500;700;800&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=22">
-<link rel="stylesheet" href="journey.css?v=22">
-<link rel="stylesheet" href="motion.css?v=22">
+<link rel="stylesheet" href="styles.css?v=24">
+<link rel="stylesheet" href="journey.css?v=24">
+<link rel="stylesheet" href="motion.css?v=24">
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"}}</script>
 </head>
 <body>
@@ -66,11 +66,20 @@
 
 <nav class="menu" id="menu" aria-label="Site navigation" hidden>
   <button class="menu-close" id="menuClose" aria-label="Close menu">&times;</button>
-  <ol class="menu-list" id="menuList"></ol>
+  <ol class="menu-list" id="menuList">
+    <li><a href="/" class="cur" aria-current="page">Home</a></li>
+    <li><a href="/about/">About</a></li>
+    <li><a href="/portfolio/">Portfolio</a></li>
+    <li><a href="/practice/">Practice</a></li>
+    <li><a href="/regions/">Global Presence</a></li>
+    <li><a href="/insights/">Insights</a></li>
+    <li><a href="/careers/">Careers</a></li>
+    <li><a href="/contact/">Contact</a></li>
+  </ol>
   <div class="menu-foot mono">
-    <a href="https://www.huntglobal.co/about" target="_blank" rel="noopener">About</a>
-    <a href="https://www.huntglobal.co/insights" target="_blank" rel="noopener">Insights</a>
-    <a href="#contact">Contact</a>
+    <a href="/privacy/">Privacy</a>
+    <a href="/terms/">Terms</a>
+    <a href="mailto:hello@huntglobal.co">hello@huntglobal.co</a>
     <a href="https://linkedin.com/" target="_blank" rel="noopener">LinkedIn</a>
   </div>
 </nav>
@@ -131,7 +140,7 @@
       <div class="stat reveal"><b data-count="4">0</b><span class="mono">Operating regions</span></div>
       <div class="stat reveal"><b data-count="39" data-suffix="+">0</b><span class="mono">Patents filed</span></div>
     </div>
-    <a class="link mono reveal" href="https://www.huntglobal.co/about" target="_blank" rel="noopener">About Hunt Global <span>&rarr;</span></a>
+    <a class="link mono reveal" href="/about/">About Hunt Global <span>&rarr;</span></a>
   </div>
 </section>
 
@@ -187,7 +196,7 @@
       <h2 class="huge split">Permanent Capital.</h2>
       <p class="lead reveal">We deploy our own patient capital with complete alignment and active ownership.</p>
       <p class="reveal narrow">We invest our own capital, ensuring complete alignment with our ventures. We don't dabble. We dominate.</p>
-      <a class="link mono reveal" href="https://www.huntglobal.co/practice/investment" target="_blank" rel="noopener">Explore practice <span>&rarr;</span></a>
+      <a class="link mono reveal" href="/practice/investment/">Explore practice <span>&rarr;</span></a>
     </div>
     <div class="thread" data-companies="biltflow,replaice,huntjobs,northstar,tribe"></div>
   </div>
@@ -199,7 +208,7 @@
       <p class="label mono reveal">Practice · Venture Building</p>
       <h2 class="huge split">Deep operational and capital deployment.</h2>
       <p class="reveal narrow">Our 120+ team works inside every venture. We build from within, we do not advise from the sidelines — forming companies, developing commercial models and scaling operating infrastructure.</p>
-      <a class="link mono reveal" href="https://www.huntglobal.co/practice/venture-building" target="_blank" rel="noopener">Explore practice <span>&rarr;</span></a>
+      <a class="link mono reveal" href="/practice/venture-building/">Explore practice <span>&rarr;</span></a>
     </div>
     <div class="thread" data-companies="northstar,tribe,huntjobs"></div>
   </div>
@@ -212,7 +221,7 @@
       <h2 class="huge split">IP at the core.</h2>
       <p class="lead reveal">With 39+ patents filed across our portfolio, we develop proprietary, patent-protected technology designed to compound into long-term structural advantage.</p>
       <p class="reveal narrow">We build proprietary systems designed to compound, scaling these innovations globally from our Singapore headquarters.</p>
-      <a class="link mono reveal" href="https://www.huntglobal.co/practice/technology-engineering" target="_blank" rel="noopener">Explore practice <span>&rarr;</span></a>
+      <a class="link mono reveal" href="/practice/technology-engineering/">Explore practice <span>&rarr;</span></a>
     </div>
     <div class="thread" data-companies="replaice,huntjobs,northstar"></div>
   </div>
@@ -224,7 +233,7 @@
       <p class="label mono reveal">Practice · Construction Intelligence</p>
       <h2 class="huge split">The AI operating system for construction.</h2>
       <p class="reveal narrow">BiltFlow OS™ connects every team, document, estimate, and supplier into one intelligent agentic workflow, from site discovery to project closeout.</p>
-      <a class="link mono reveal" href="https://www.huntglobal.co/practice/construction-intelligence" target="_blank" rel="noopener">Explore practice <span>&rarr;</span></a>
+      <a class="link mono reveal" href="/practice/construction-intelligence/">Explore practice <span>&rarr;</span></a>
     </div>
     <div class="thread" data-companies="biltflow"></div>
   </div>
@@ -325,7 +334,7 @@
         </div>
       </div>
       <div class="ins-list" id="insList">
-        <a class="ins-card folder" data-type="articles" href="https://www.huntglobal.co/insights" target="_blank" rel="noopener">
+        <a class="ins-card folder" data-type="articles" href="/insights/institutional-ai/">
           <span class="tab mono">Articles · 2024</span>
           <h3>Enterprise AI and Institutional Governance</h3>
           <p>How rigorous MAS and ACRA frameworks accelerate our global AI deployment.</p>
@@ -369,7 +378,7 @@
 <footer class="foot">
   <div class="wrap">
     <div class="foot-top">
-      <a href="#hero" class="logo big">HUNT<br>GLOBAL</a>
+      <a href="/" class="logo big">HUNT<br>GLOBAL</a>
       <form class="news" id="news">
         <label class="mono" for="newsEmail">Subscribe to our newsletter</label>
         <div><input id="newsEmail" type="email" placeholder="Email address" required><button class="mono" type="submit">Submit</button></div>
@@ -380,37 +389,42 @@
         <p class="mono h">Hunt Global</p>
         <p>Level 8, 2 Venture Drive<br>Singapore 608526</p>
         <a href="mailto:hello@huntglobal.co">hello@huntglobal.co</a>
+        <a href="/insights/">Insights</a>
+        <a href="/careers/">Careers</a>
+        <a href="/contact/">Contact</a>
       </div>
       <div>
         <p class="mono h">About</p>
-        <a href="https://www.huntglobal.co/about" target="_blank" rel="noopener">About Us</a>
-        <a href="https://www.huntglobal.co/about/vision-values" target="_blank" rel="noopener">Vision &amp; Values</a>
-        <a href="https://www.huntglobal.co/about/approach" target="_blank" rel="noopener">Approach</a>
-        <a href="https://www.huntglobal.co/about/why-singapore" target="_blank" rel="noopener">Why Singapore</a>
+        <a href="/about/">About Us</a>
+        <a href="/about/vision-values/">Vision &amp; Values</a>
+        <a href="/about/approach/">Approach</a>
+        <a href="/about/why-singapore/">Why Singapore</a>
+        <a href="/about/recognition/">Recognition</a>
       </div>
       <div>
         <p class="mono h">Portfolio</p>
-        <a href="https://www.huntglobal.co/portfolio/biltflow" target="_blank" rel="noopener">Biltflow</a>
-        <a href="https://www.huntglobal.co/portfolio/replaice-technologies" target="_blank" rel="noopener">Replaice Technologies</a>
-        <a href="https://www.huntglobal.co/portfolio/huntjobs" target="_blank" rel="noopener">HuntJobs</a>
-        <a href="https://www.huntglobal.co/portfolio/northstar" target="_blank" rel="noopener">Northstar</a>
-        <a href="https://www.huntglobal.co/portfolio/tribe" target="_blank" rel="noopener">Tribe</a>
+        <a href="/portfolio/biltflow/">Biltflow</a>
+        <a href="/portfolio/replaice-technologies/">Replaice Technologies</a>
+        <a href="/portfolio/huntjobs/">HuntJobs</a>
+        <a href="/portfolio/northstar/">Northstar</a>
+        <a href="/portfolio/tribe/">Tribe</a>
       </div>
       <div>
         <p class="mono h">Practice</p>
-        <a href="#investment">Investment</a>
-        <a href="#venture">Venture Building</a>
-        <a href="#technology">Technology &amp; Engineering</a>
-        <a href="#construction">Construction Intelligence</a>
+        <a href="/practice/investment/">Investment</a>
+        <a href="/practice/venture-building/">Venture Building</a>
+        <a href="/practice/technology-engineering/">Technology &amp; Engineering</a>
+        <a href="/practice/construction-intelligence/">Construction Intelligence</a>
       </div>
       <div>
         <p class="mono h">Global presence</p>
+        <a href="/regions/">Global Presence</a>
         <p>Singapore — Group HQ<br>Sydney, Australia<br>Bangalore, India<br>San Francisco, USA<br>London, UK</p>
       </div>
     </div>
     <div class="foot-bottom mono">
       <span>© 2026 Hunt Global PTE Ltd. All rights reserved.</span>
-      <span><a href="https://www.huntglobal.co/privacy" target="_blank" rel="noopener">Privacy Policy</a> · <a href="https://www.huntglobal.co/terms" target="_blank" rel="noopener">Terms &amp; Conditions</a> · <a href="https://linkedin.com/" target="_blank" rel="noopener">LinkedIn</a></span>
+      <span><a href="/privacy/">Privacy Policy</a> · <a href="/terms/">Terms &amp; Conditions</a> · <a href="https://linkedin.com/" target="_blank" rel="noopener">LinkedIn</a></span>
     </div>
   </div>
 </footer>
@@ -432,7 +446,7 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-<script type="module" src="main.js?v=22"></script>
-<script type="module" src="motion.js?v=22"></script>
+<script type="module" src="main.js?v=24"></script>
+<script type="module" src="motion.js?v=24"></script>
 </body>
 </html>

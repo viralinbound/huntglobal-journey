@@ -284,3 +284,13 @@ body.in-hero .counter, body.in-hero .ticker { transform: translateY(90px); opaci
 .fcard .fn { justify-content: flex-end; }
 .thread .t-card .t-logo { flex: 1 1 auto; }
 
+
+/* page-to-page fade (internal links stay in this site) */
+body.leaving main, body.leaving .foot { opacity: 0; transform: translateY(-14px); transition: opacity .32s ease, transform .32s ease; }
+
+/* tablets (761–1100px): the globe takes the right half, so long home text stays in the left half */
+@media (min-width: 761px) and (max-width: 1100px) {
+  .operate .principles, .operate .values-note { max-width: 52vw; }
+  .regions .regions-copy { grid-template-columns: 1fr; max-width: 52vw; }
+  .regions .region-panel { max-width: 52vw; }
+}
