@@ -262,3 +262,18 @@ body.in-hero .counter, body.in-hero .ticker { transform: translateY(90px); opaci
   .menu, .drawer-panel { background: #fffdfb; }
   .ch > .wrap { will-change: auto; }
 }
+
+/* =========================================================
+   Company chapters v2 (desktop/tablet): CSS-sticky panel, chapters stacked IN PLACE.
+   The browser holds the panel (no JS pin), so it can't lag or overlap other sections.
+   ========================================================= */
+.pf-desk .portfolio.ch { position: relative; overflow: visible; }
+.pf-desk .pf-pin { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; }
+.pf-desk .pf-track { position: relative; display: block; width: 100%; height: 100%; transform: none !important; }
+.pf-desk .pf-scene { position: absolute; inset: 0; width: 100%; height: 100%; }
+.pf-desk .pf-in, .pf-desk .pf-logo { transform: none; }
+/* chapter text always stays in the left column; the globe owns the right */
+.pf-desk .pf-in { width: min(600px, 44vw); }
+.pf-desk .pf-intro .pf-in { width: min(720px, 50vw); }
+/* path tiles for companies without a logo image: no empty logo slot, no divider */
+.thread .t-card.no-logo .t-name { border-left: 0; padding-left: 0; }

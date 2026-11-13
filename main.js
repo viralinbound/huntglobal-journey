@@ -114,7 +114,7 @@ const monoLogo = c => c.logo ? `<img src="${c.logo}" alt="${c.name}">` : `<span 
     <article class="pf-scene" data-state="pf-${c.id}" data-stop="${c.short || c.name}" style="--tint:${STORY[c.id].tint}">
       <div class="pf-in">
         <p class="pf-k mono"><i></i><span>${c.cat}</span></p>
-        <div class="pf-logo">${monoLogo(c)}</div>
+        ${c.logo ? `<div class="pf-logo">${monoLogo(c)}</div>` : ""}
         <h3 class="pf-name">${c.short || c.name}</h3>
         <p class="pf-line">${STORY[c.id].line}</p>
         <p class="pf-desc">${c.desc}</p>
@@ -128,7 +128,7 @@ const monoLogo = c => c.logo ? `<img src="${c.logo}" alt="${c.name}">` : `<span 
   $$('.thread').forEach(box => {
     const list = box.dataset.companies.split(',').map(id => COMPANIES.find(c => c.id === id));
     box.innerHTML = `<p class="thread-h mono">On this path</p><div class="thread-line" aria-hidden="true"><i></i></div><ol>${list.map((c, k) => `
-      <li><span class="t-dot" aria-hidden="true"></span><button class="t-card" data-open="${c.id}" aria-label="${c.name} — read the story"><span class="t-tab mono">${c.cat}</span><span class="t-logo">${monoLogo(c)}</span><span class="t-name">${c.short || c.name}</span><span class="t-go" aria-hidden="true">&rarr;</span></button></li>`).join('')}</ol>`;
+      <li><span class="t-dot" aria-hidden="true"></span><button class="t-card${c.logo ? "" : " no-logo"}" data-open="${c.id}" aria-label="${c.name} — read the story"><span class="t-tab mono">${c.cat}</span>${c.logo ? `<span class="t-logo">${monoLogo(c)}</span>` : ""}<span class="t-name">${c.short || c.name}</span><span class="t-go" aria-hidden="true">&rarr;</span></button></li>`).join('')}</ol>`;
   });
 }
 
@@ -981,24 +981,38 @@ gsap.timeline({ scrollTrigger: { trigger: '#hero', start: 'top top', end: '40% t
     }
   };
   if (track && !isMobile() && !reduceMotion) {
-    const dist = () => track.scrollWidth - innerWidth;
-    const ride = gsap.to(track, { x: () => -dist(), ease: 'none' });
-    pfST = ScrollTrigger.create({
-      trigger: '#portfolio', start: 'top top', end: () => '+=' + dist() * 1.15, pin: true, scrub: .8, animation: ride, invalidateOnRefresh: true,
-      onUpdate: s => {
-        const p = s.progress, n = scenes.length - 1;
-        fillBar.style.transform = `scaleX(${p})`;
-        playScene(Math.min(n, Math.floor(p * n + 0.7)));   // start a chapter as soon as ~30% of it is on screen
-        // depth: logos and big numerals drift at different speeds than the text
-        scenes.forEach((sc, k) => { const d = k - p * n; sc.style.setProperty('--d', d.toFixed(3)); });
-      },
-      onRefresh: () => drawRoute(),
-      onLeave: showAll,                                   // fast scroll past the ride: nothing left hidden
-      onEnterBack: showAll,                               // coming back up into the ride: chapters are already there
-      onLeaveBack: () => { activePf = -1; resetAll(); }   // scrolled back above the whole section
-    });
-    if (pfST.progress >= 1) showAll();
-    roadBtns.forEach(b => b.addEventListener('click', () => { const j = +b.dataset.pf; scrollTo({ top: pfST.start + j / (scenes.length - 1) * (pfST.end - pfST.start) + 2, behavior: 'smooth' }); }));
+    /* Desktop/tablet: the section is a tall block whose inner panel is CSS-sticky (handled by the browser
+       itself, so it can never lag behind a fast scroll or sit on top of another section). Chapters sit on
+       top of each other in that panel and change IN PLACE: text left, globe right — nothing slides under the globe. */
+    document.documentElement.classList.add('pf-desk');
+    const sec = $('#portfolio'), n = scenes.length;
+    sec.style.height = `calc(100vh + ${(n - 1) * 85}vh)`;
+    pfST = { get start() { return docY(sec); }, get end() { return docY(sec) + sec.offsetHeight - innerHeight; } };
+    scenes.forEach((sc, k) => gsap.set(sc, { autoAlpha: k === 0 ? 1 : 0 }));
+    let shown = 0;
+    const switchTo = (j, dir) => {
+      if (j === shown) return;
+      const prev = scenes[shown];
+      scenes.forEach((sc, k) => { if (k !== j && k !== shown) { gsap.killTweensOf(sc); gsap.set(sc, { autoAlpha: 0, y: 0 }); } });   // fast scroll: nothing in between stays
+      gsap.killTweensOf(prev); gsap.to(prev, { autoAlpha: 0, y: dir > 0 ? -36 : 36, duration: .3, ease: 'power2.in' });
+      const next = scenes[j]; gsap.killTweensOf(next);
+      gsap.fromTo(next, { autoAlpha: 0, y: dir > 0 ? 36 : -36 }, { autoAlpha: 1, y: 0, duration: .55, delay: .28, ease: 'expo.out' });
+      shown = j;
+      if (dir > 0) playScene(j);                                        // first time going forward: full entrance
+      else { activePf = j; if (tls[j]) { played.add(j); tls[j].progress(1); } }   // going back: just there
+    };
+    let ticking = false;
+    const update = () => {
+      ticking = false;
+      const range = pfST.end - pfST.start, p = clampN((scrollY - pfST.start) / Math.max(1, range), 0, 1);
+      const j = Math.round(p * (n - 1));
+      if (j !== shown) switchTo(j, j > shown ? 1 : -1);
+      if (scrollY + innerHeight < pfST.start) { if (played.size) { resetAll(); activePf = -1; } }   // section fully below the screen: replay next time
+      else if (scrollY > pfST.end && played.size < n - 1) showAll();
+    };
+    addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
+    addEventListener('resize', update); update();
+    roadBtns.forEach(b => b.addEventListener('click', () => { const j = +b.dataset.pf; scrollTo({ top: pfST.start + j / (n - 1) * (pfST.end - pfST.start) + 2, behavior: 'smooth' }); }));
   } else if (track) {
     // phones: chapters stack vertically and play as they arrive
     scenes.forEach((sc, j) => {
