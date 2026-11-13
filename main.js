@@ -114,7 +114,6 @@ const monoLogo = c => c.logo ? `<img src="${c.logo}" alt="${c.name}">` : `<span 
     <article class="pf-scene" data-state="pf-${c.id}" data-stop="${c.short || c.name}" style="--tint:${STORY[c.id].tint}">
       <div class="pf-in">
         <p class="pf-k mono"><i></i><span>${c.cat}</span></p>
-        ${c.logo ? `<div class="pf-logo">${monoLogo(c)}</div>` : ""}
         <h3 class="pf-name">${c.short || c.name}</h3>
         <p class="pf-line">${STORY[c.id].line}</p>
         <p class="pf-desc">${c.desc}</p>
@@ -128,7 +127,7 @@ const monoLogo = c => c.logo ? `<img src="${c.logo}" alt="${c.name}">` : `<span 
   $$('.thread').forEach(box => {
     const list = box.dataset.companies.split(',').map(id => COMPANIES.find(c => c.id === id));
     box.innerHTML = `<p class="thread-h mono">On this path</p><div class="thread-line" aria-hidden="true"><i></i></div><ol>${list.map((c, k) => `
-      <li><span class="t-dot" aria-hidden="true"></span><button class="t-card${c.logo ? "" : " no-logo"}" data-open="${c.id}" aria-label="${c.name} — read the story"><span class="t-tab mono">${c.cat}</span>${c.logo ? `<span class="t-logo">${monoLogo(c)}</span>` : ""}<span class="t-name">${c.short || c.name}</span><span class="t-go" aria-hidden="true">&rarr;</span></button></li>`).join('')}</ol>`;
+      <li><span class="t-dot" aria-hidden="true"></span><button class="t-card${c.logo ? "" : " no-logo"}" data-open="${c.id}" aria-label="${c.name} — read the story"><span class="t-tab mono">${c.cat}</span>${c.logo ? `<span class="t-logo">${monoLogo(c)}</span>` : `<span class="t-name">${c.short || c.name}</span>`}<span class="t-go" aria-hidden="true">&rarr;</span></button></li>`).join('')}</ol>`;
   });
 }
 
@@ -212,8 +211,11 @@ function openDrawer(id) {
 function fillDrawer() {
   const c = COMPANIES[dIdx];
   $('#dTab').textContent = c.cat;
-  $('#dLogo').innerHTML = logoHTML(c);
+  // the name appears once: the logo when there is one (title kept for screen readers), else the title
+  $('#dLogo').innerHTML = c.logo ? logoHTML(c) : '';
+  $('#dLogo').hidden = !c.logo;
   $('#dTitle').textContent = c.name;
+  $('#dTitle').classList.toggle('sr', !!c.logo);
   $('#dDesc').textContent = c.desc;
   $('#dMeta').innerHTML = c.meta.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('') + `<dt>Governed</dt><dd>From Singapore HQ</dd>`;
   $('#dLinks').innerHTML =
@@ -917,7 +919,7 @@ COMPANIES.forEach((c, i) => {
   const el = document.createElement('a');
   el.className = 'fcard'; el.style.background = TINT[c.id]; el.dataset.tab = c.cat; el.href = '#portfolio';
   el.style.left = FLOAT_POS[i][0] + '%'; el.style.top = FLOAT_POS[i][1] + '%';
-  el.innerHTML = `<div class="fl">${c.logo ? `<img src="${c.logo}" alt="">` : `<span class="wm">${c.wordmark}</span>`}</div><div class="fn"><span>${c.short || c.name}</span><i>↗</i></div>`;
+  el.innerHTML = `<div class="fl">${c.logo ? `<img src="${c.logo}" alt="">` : `<span class="wm">${c.wordmark}</span>`}</div><div class="fn"><span class="sr">${c.short || c.name}</span><i>↗</i></div>`;
   el.addEventListener('click', e => { e.preventDefault(); e.stopPropagation(); openDrawer(c.id); });
   $('#floaters').appendChild(el);
   gsap.set(el, { rotation: FLOAT_POS[i][2], opacity: 0, y: 60 });
