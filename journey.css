@@ -293,4 +293,6 @@ body.leaving main, body.leaving .foot { opacity: 0; transform: translateY(-14px)
   .operate .principles, .operate .values-note { max-width: 52vw; }
   .regions .regions-copy { grid-template-columns: 1fr; max-width: 52vw; }
   .regions .region-panel { max-width: 52vw; }
+  .house .two-col { grid-template-columns: 1fr; max-width: 52vw; }
 }
+.resume .loader4 { display: none; }

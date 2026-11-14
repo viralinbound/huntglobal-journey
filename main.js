@@ -1041,25 +1041,63 @@ if (tzEls.length) {
   tick(); setInterval(tick, 15000);
 }
 
-/* page-to-page: every internal link stays in this site, with a short fade out */
+/* page-to-page: every internal link stays in this site, with a short fade out.
+   The spot you leave is remembered, so the browser Back button (or our Back pill) lands you exactly there. */
+const Y_KEY = 'hg:y:' + location.pathname;
+const store = { get: k => { try { return sessionStorage.getItem(k); } catch { return null; } }, set: (k, v) => { try { sessionStorage.setItem(k, v); } catch {} } };
+const saveY = () => store.set(Y_KEY, String(Math.round(scrollY)));
+const NAV_TYPE = performance.getEntriesByType?.('navigation')[0]?.type;
+const RESUME_Y = NAV_TYPE === 'back_forward' ? +store.get(Y_KEY) || 0 : 0;
+if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+addEventListener('pagehide', saveY);
+const sameSite = (() => { try { return !!document.referrer && new URL(document.referrer).origin === location.origin; } catch { return false; } })();
+const go = href => { saveY(); document.body.classList.add('leaving'); setTimeout(() => { location.href = href; }, reduceMotion ? 0 : 300); };
 document.addEventListener('click', e => {
   const a = e.target.closest?.('a[href]');
   if (!a || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || a.target === '_blank') return;
   const url = new URL(a.href, location.href);
   if (url.origin !== location.origin || (url.pathname === location.pathname && url.hash)) return;
   e.preventDefault();
-  document.body.classList.add('leaving');
-  setTimeout(() => { location.href = url.href; }, reduceMotion ? 0 : 300);
+  if (a.hasAttribute('data-back') && sameSite && history.length > 1) { saveY(); document.body.classList.add('leaving'); setTimeout(() => history.back(), reduceMotion ? 0 : 260); return; }
+  if (url.pathname === location.pathname) { scrollTo({ top: 0, behavior: 'smooth' }); return; }
+  go(url.href);
 });
-addEventListener('pageshow', e => { if (e.persisted) document.body.classList.remove('leaving'); });
+addEventListener('pageshow', e => { if (e.persisted) { document.body.classList.remove('leaving'); ScrollTrigger.refresh(); onScroll(); } });
+const resumeAt = y => {   // jump back to where the visitor was, then let every trigger catch up
+  if (!y) return;
+  document.documentElement.style.scrollBehavior = 'auto';
+  scrollTo(0, y); ScrollTrigger.refresh(); scrollTo(0, y); ScrollTrigger.update(); onScroll();
+  requestAnimationFrame(() => { document.documentElement.style.scrollBehavior = ''; });
+};
+
+/* section dock: slides in after the hero, steps aside while the footer is on screen */
+{
+  const dock = document.getElementById('dock');
+  if (dock) {
+    const t = dock.querySelector('.dock-track'), on = t.querySelector('.on');
+    const fit = () => { dock.classList.toggle('over', t.scrollWidth > t.clientWidth + 2); if (on) t.scrollLeft = on.offsetLeft - (t.clientWidth - on.offsetWidth) / 2; };
+    fit(); document.fonts?.ready.then(fit); addEventListener('resize', fit);
+    setTimeout(() => dock.classList.add('in'), reduceMotion ? 0 : 700);
+    const foot = document.querySelector('.foot');
+    if (foot && 'IntersectionObserver' in window) new IntersectionObserver(([en]) => dock.classList.toggle('away', en.isIntersecting), { rootMargin: '0px 0px -12% 0px' }).observe(foot);
+  }
+}
 
 function bootPage() {   // sub pages: no loader, the page fades in and the journey starts at once
   drawRoute(); ScrollTrigger.refresh(); onScroll();
   orbKick(1);
+  resumeAt(RESUME_Y);
 }
 
 function boot() {
   if (!HOME) return bootPage();
+  if (RESUME_Y) {   // coming back to the home page: no loader again, straight back to the same spot
+    $('#loader').remove();
+    intro();
+    drawRoute(); ScrollTrigger.refresh(); onScroll();
+    resumeAt(RESUME_Y);
+    return;
+  }
   document.body.classList.add('locked');
   const lp = { v: 0 };
   const tl = gsap.timeline();

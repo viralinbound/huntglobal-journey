@@ -6,7 +6,7 @@
 import { mkdirSync, writeFileSync, readFileSync } from 'node:fs';
 import { dirname } from 'node:path';
 
-const V = 24;   // cache-bust version for css/js
+const V = 26;   // cache-bust version for css/js
 
 /* ======================= DATA (huntglobal.co) ======================= */
 const COMPANIES = [
@@ -84,6 +84,27 @@ ${NAV.map(([h, l]) => `    <li><a href="${h}"${(h === '/' ? path === '/' : path.
   </div>
 </nav>`;
 
+/* section dock: every sub page shows its sibling pages + a Back button (history back, so you land where you were) */
+const GROUPS = [
+  [['/about/', 'Overview'], ['/about/vision-values/', 'Vision & Values'], ['/about/approach/', 'Approach'], ['/about/why-singapore/', 'Why Singapore'], ['/about/recognition/', 'Recognition']],
+  [['/portfolio/', 'All companies'], ...COMPANIES.map(c => [`/portfolio/${c.slug}/`, nm(c)])],
+  [['/practice/', 'Overview'], ...PRACTICES.map(p => [`/practice/${p.slug}/`, p.t])],
+  [['/regions/', 'Global Presence'], ['/insights/', 'Insights'], ['/careers/', 'Careers'], ['/contact/', 'Contact']],
+  [['/privacy/', 'Privacy Policy'], ['/terms/', 'Terms & Conditions']]
+];
+const dock = path => {
+  const g = GROUPS.find(l => l.some(([h]) => h === path)) || GROUPS.find(l => l.some(([h]) => h !== '/' && path.startsWith(h)));
+  if (!g) return '';
+  const cur = g.find(([h]) => h === path) || g.filter(([h]) => path.startsWith(h)).sort((a, b) => b[0].length - a[0].length)[0];
+  const parent = path === g[0][0] || !path.startsWith(g[0][0]) ? (cur && cur[0] !== path ? cur[0] : '/') : g[0][0];
+  return `<nav class="dock" id="dock" aria-label="In this section">
+  <a class="dock-back mono" href="${parent}" data-back aria-label="Back"><i aria-hidden="true">&larr;</i><span>Back</span></a>
+  <div class="dock-track">
+${g.map(([h, l]) => `    <a class="mono${h === cur[0] ? ' on' : ''}" href="${h}"${h === path ? ' aria-current="page"' : ''}>${amp(l)}</a>`).join('\n')}
+  </div>
+</nav>`;
+};
+
 const footer = () => `<footer class="foot">
   <div class="wrap">
     <div class="foot-top">
@@ -159,6 +180,7 @@ ${HGDEFS}
   <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="menu"><i></i><i></i><i></i></button>
 </header>
 ${menu(path)}
+${dock(path)}
 
 <main>
 ${body}
@@ -184,8 +206,11 @@ ${inner}
 </section>`;
 
 const crumb = list => `<p class="crumb mono reveal"><a href="/">Hunt Global</a>${list.map(([l, h]) => `<i></i>${h ? `<a href="${h}">${amp(l)}</a>` : `<b>${amp(l)}</b>`}`).join('')}</p>`;
+// the hero label is dropped when it only repeats the breadcrumb / title (say each thing once)
+const norm = s => s.replace(/<[^>]+>|&[a-z]+;/g, ' ').replace(/[^a-z0-9 ]/gi, ' ').replace(/\s+/g, ' ').trim().toLowerCase();
+const repeats = (label, title, crumbs) => !/\d/.test(label) && [title, crumbs[crumbs.length - 1][0]].some(t => norm(label).includes(norm(t)) || norm(t).includes(norm(label)));
 const hero = (state, { crumbs, label, title, lead, extra = '' }) => sec(state, `    ${crumb(crumbs)}
-    <p class="label mono reveal">${amp(label)}</p>
+    ${repeats(label, title, crumbs) ? '' : `<p class="label mono reveal">${amp(label)}</p>`}
     <h1 class="huge split">${title}</h1>
     ${lead ? `<p class="lead reveal">${lead}</p>` : ''}
     ${extra}
